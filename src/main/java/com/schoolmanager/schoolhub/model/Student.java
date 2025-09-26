@@ -2,16 +2,12 @@ package com.schoolmanager.schoolhub.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
@@ -43,9 +39,8 @@ public class Student {
   @JoinColumn(name = "id")
   private User user;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "student_parent", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "parent_id"))
-  private Set<Parent> parents;
+  @OneToMany(mappedBy = "student")
+  private List<StudentParent> studentParents;
 
   @OneToMany(mappedBy = "student")
   private List<Score> scores;

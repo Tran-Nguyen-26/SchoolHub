@@ -1,12 +1,12 @@
 package com.schoolmanager.schoolhub.model;
 
-import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +29,6 @@ public class Parent {
 
   private String occupation;
 
-  @ManyToMany(mappedBy = "parents")
-  private Set<Student> students;
+  @OneToMany(mappedBy = "parent")
+  private List<StudentParent> studentLinks;
 }

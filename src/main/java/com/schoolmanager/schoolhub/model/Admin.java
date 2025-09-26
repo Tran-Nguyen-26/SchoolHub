@@ -1,6 +1,10 @@
 package com.schoolmanager.schoolhub.model;
 
+import com.schoolmanager.schoolhub.enums.AdminPosition;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
@@ -19,7 +23,8 @@ public class Admin {
   @Id
   private Long id;
 
-  private String position;
+  @Enumerated(EnumType.STRING)
+  private AdminPosition position;
 
   @OneToOne
   @MapsId

@@ -3,20 +3,20 @@ package com.schoolmanager.schoolhub.dto;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.schoolmanager.schoolhub.enums.Gender;
-
 import lombok.Data;
 
 @Data
-public class StudentDto {
+public class ParentDto {
   private Long id;
   private String username;
+  private String email;
+  private String phone;
+  private String address;
 
   @JsonFormat(pattern = "dd-MM-yyyy")
   private LocalDate dob;
 
-  private Gender gender;
-
-  private String classroomName;
-
+  private String relationship;
+  private String occupation;
+  private String role;
 }

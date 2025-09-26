@@ -2,12 +2,15 @@ package com.schoolmanager.schoolhub.service.classroom;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.schoolmanager.schoolhub.dto.ClassroomDto;
 import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.model.Grade;
 import com.schoolmanager.schoolhub.repository.ClassroomRepository;
 import com.schoolmanager.schoolhub.repository.GradeRepository;
+import com.schoolmanager.schoolhub.service.student.IStudentService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +20,8 @@ public class ClassroomService implements IClassroomService {
 
   private final ClassroomRepository classroomRepository;
   private final GradeRepository gradeRepository;
+  private final IStudentService studentService;
+  private final ModelMapper modelMapper;
 
   @Override
   public List<Classroom> getAllClassrooms() {
@@ -45,6 +50,7 @@ public class ClassroomService implements IClassroomService {
       throw new RuntimeException("add fail");
     classroom = new Classroom();
     classroom.setName(classroomName);
+    classroom.setTotalStudents(0);
     String gradeLevel = classroomName.substring(0, 2);
     Grade grade = gradeRepository.findByLevel(gradeLevel);
     classroom.setGrade(grade);
@@ -62,5 +68,17 @@ public class ClassroomService implements IClassroomService {
   @Override
   public void deleteClassroomByName(String name) {
     classroomRepository.delete(classroomRepository.findByName(name));
+  }
+
+  @Override
+  public ClassroomDto convertToDto(Classroom classroom) {
+    ClassroomDto classroomDto = modelMapper.map(classroom, ClassroomDto.class);
+    classroomDto.setStudentDtos(studentService.convertListToDto(classroom.getStudents()));
+    return classroomDto;
+  }
+
+  @Override
+  public List<ClassroomDto> convertListToDto(List<Classroom> classrooms) {
+    return classrooms.stream().map(c -> convertToDto(c)).toList();
   }
 }
