@@ -1,4 +1,4 @@
-package com.schoolmanager.schoolhub.dto;
+package com.schoolmanager.schoolhub.request;
 
 import java.time.LocalDate;
 
@@ -10,10 +10,10 @@ import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 @Data
-public class UserDto {
-  private Long id;
+public class AddUserRequest {
   private String username;
   private String email;
+  private String password;
   private String phone;
   private String address;
 

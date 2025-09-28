@@ -1,8 +1,7 @@
-package com.schoolmanager.schoolhub.dto;
+package com.schoolmanager.schoolhub.request;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolmanager.schoolhub.enums.Gender;
 
 import jakarta.persistence.EnumType;
@@ -10,18 +9,13 @@ import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 @Data
-public class UserDto {
-  private Long id;
+public class UpdateUserRequest {
   private String username;
   private String email;
   private String phone;
   private String address;
-
-  @JsonFormat(pattern = "dd-MM-yyyy")
   private LocalDate dob;
 
   @Enumerated(EnumType.STRING)
   private Gender gender;
-
-  private String role;
 }
