@@ -38,6 +38,7 @@ public class JwtUtils {
         .claim("permission", permissions)
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + expirationTime))
+        .signWith(key(), Jwts.SIG.HS256)
         .compact();
   }
 

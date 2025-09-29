@@ -32,6 +32,7 @@ public class SchoolUserDetails implements UserDetails {
         .stream()
         .map(p -> new SimpleGrantedAuthority("PERMISSION_" + p.getPermissionName()))
         .collect(Collectors.toList());
+    authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
     return new SchoolUserDetails(
         user.getId(),
         user.getEmail(),

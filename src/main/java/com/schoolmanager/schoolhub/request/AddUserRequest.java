@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolmanager.schoolhub.enums.Gender;
+import com.schoolmanager.schoolhub.enums.RoleName;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,5 +24,5 @@ public class AddUserRequest {
   @Enumerated(EnumType.STRING)
   private Gender gender;
 
-  private String role;
+  private RoleName role;
 }

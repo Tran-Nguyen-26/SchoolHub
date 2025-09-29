@@ -82,7 +82,7 @@ public class UserService implements IUserService {
   @Override
   public UserDto convertToDto(User user) {
     UserDto userDto = modelMapper.map(user, UserDto.class);
-    userDto.setRole(user.getRole().getName());
+    userDto.setRole(user.getRole().getName().toString());
     return userDto;
   }
 

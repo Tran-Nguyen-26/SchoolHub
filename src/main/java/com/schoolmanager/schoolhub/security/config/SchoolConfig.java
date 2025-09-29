@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.schoolmanager.schoolhub.security.jwt.AuthTokenFilter;
 import com.schoolmanager.schoolhub.security.jwt.JwtAuthEntryPoint;
+import com.schoolmanager.schoolhub.security.jwt.JwtUtils;
 import com.schoolmanager.schoolhub.security.user.SchoolUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,9 @@ public class SchoolConfig {
 
   private final SchoolUserDetailsService userDetailsService;
   private final JwtAuthEntryPoint authEntryPoint;
+  private final JwtUtils jwtUtils;
 
-  private static final List<String> SECURED_URLS = List.of("/api/v1/users/**");
+  // private static final List<String> SECURED_URLS = List.of("/api/v1/users/**");
 
   @Bean
   public ModelMapper modelMapper() {
@@ -44,7 +46,7 @@ public class SchoolConfig {
 
   @Bean
   public AuthTokenFilter authTokenFilter() {
-    return new AuthTokenFilter();
+    return new AuthTokenFilter(jwtUtils, userDetailsService);
   }
 
   @Bean
@@ -65,7 +67,7 @@ public class SchoolConfig {
         .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(SECURED_URLS.toArray(new String[0])).authenticated().anyRequest().permitAll());
+            .requestMatchers("/api/v1/login/**").permitAll().anyRequest().authenticated());
     http.authenticationProvider(authenticationProvider());
     http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     return http.build();

@@ -28,7 +28,7 @@ public class Permission {
   private Long id;
 
   @Enumerated(EnumType.STRING)
-  @Column(unique = true, nullable = false)
+  @Column(unique = true, nullable = false, length = 50)
   private PermissionName permissionName;
 
   @ManyToMany(mappedBy = "permissions")

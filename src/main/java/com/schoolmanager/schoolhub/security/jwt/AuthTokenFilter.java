@@ -19,8 +19,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
   private JwtUtils jwtUtils;
-
   private SchoolUserDetailsService userDetailsService;
+
+  public AuthTokenFilter(JwtUtils jwtUtils, SchoolUserDetailsService userDetailsService) {
+    this.jwtUtils = jwtUtils;
+    this.userDetailsService = userDetailsService;
+  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -34,11 +38,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
     } catch (JwtException e) {
-      response.setStatus(401);
-      response.getWriter().write(e.getMessage() + " : Invalid or expired token");
+      if (!response.isCommitted()) {
+        response.setStatus(401);
+        response.getWriter().write(e.getMessage() + " : Invalid or expired token");
+      }
+      return;
     } catch (Exception e) {
-      response.setStatus(500);
-      response.getWriter().write(e.getMessage());
+      if (!response.isCommitted()) {
+        response.setStatus(500);
+        response.getWriter().write(e.getMessage());
+      }
+      return;
     }
 
     filterChain.doFilter(request, response);
