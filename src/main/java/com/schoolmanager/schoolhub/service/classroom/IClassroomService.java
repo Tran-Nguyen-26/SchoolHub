@@ -16,9 +16,13 @@ public interface IClassroomService {
 
   Classroom addClassroom(String classroomName);
 
+  Classroom updateHomeroomTeacher(Long classroomId, Long teacherId);
+
   void deleteClassroomById(Long id);
 
   void deleteClassroomByName(String name);
+
+  Classroom addStudentToClassroom(Long classroomId, Long studentId);
 
   ClassroomDto convertToDto(Classroom classroom);
 

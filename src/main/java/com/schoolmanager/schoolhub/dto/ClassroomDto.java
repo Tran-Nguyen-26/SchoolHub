@@ -8,6 +8,7 @@ import lombok.Data;
 public class ClassroomDto {
   private Long id;
   private String name;
+  private String homeroomTeacher;
   private int totalStudents;
   private List<StudentDto> studentDtos;
 }

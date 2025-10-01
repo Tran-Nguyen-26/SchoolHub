@@ -3,6 +3,7 @@ package com.schoolmanager.schoolhub.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class TeacherController {
 
   private final ITeacherService teacherService;
 
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllTeachers() {
     List<Teacher> teachers = teacherService.getAllTeachers();
@@ -29,6 +31,7 @@ public class TeacherController {
     return ResponseEntity.ok(new ApiResponse("success", teacherDtos));
   }
 
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getTeacherById(@PathVariable Long id) {
     Teacher teacher = teacherService.getTeacherById(id);
@@ -36,6 +39,7 @@ public class TeacherController {
     return ResponseEntity.ok(new ApiResponse("success", teacherDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/subject/{name}")
   public ResponseEntity<ApiResponse> getTeachersBySubjectName(@PathVariable String name) {
     List<Teacher> teachers = teacherService.getTeachersBySubjectName(name);

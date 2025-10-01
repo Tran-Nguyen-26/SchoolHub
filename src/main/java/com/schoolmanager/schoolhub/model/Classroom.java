@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,10 @@ public class Classroom {
   @ManyToOne
   @JoinColumn(name = "grade_id", nullable = false)
   private Grade grade;
+
+  @OneToOne
+  @JoinColumn(name = "teacher_id")
+  private Teacher homeroomTeacher;
 
   @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL)
   private List<Student> students;

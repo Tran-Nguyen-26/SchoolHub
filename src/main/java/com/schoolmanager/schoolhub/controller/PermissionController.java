@@ -3,6 +3,7 @@ package com.schoolmanager.schoolhub.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class PermissionController {
 
   private final IPermissionService permissionService;
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllPermissions() {
     List<Permission> permission = permissionService.getAllPermissions();
@@ -29,6 +31,7 @@ public class PermissionController {
     return ResponseEntity.ok(new ApiResponse("success", permissionDtos));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getPermissionById(@PathVariable Long id) {
     Permission permission = permissionService.getPermissionById(id);

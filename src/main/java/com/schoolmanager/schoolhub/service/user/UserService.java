@@ -7,9 +7,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.UserDto;
+import com.schoolmanager.schoolhub.enums.RoleName;
+import com.schoolmanager.schoolhub.model.Admin;
+import com.schoolmanager.schoolhub.model.Parent;
 import com.schoolmanager.schoolhub.model.Role;
+import com.schoolmanager.schoolhub.model.Student;
+import com.schoolmanager.schoolhub.model.Teacher;
 import com.schoolmanager.schoolhub.model.User;
+import com.schoolmanager.schoolhub.repository.AdminRepository;
+import com.schoolmanager.schoolhub.repository.ParentRepository;
 import com.schoolmanager.schoolhub.repository.RoleRepository;
+import com.schoolmanager.schoolhub.repository.StudentRepository;
+import com.schoolmanager.schoolhub.repository.TeacherRepository;
 import com.schoolmanager.schoolhub.repository.UserRepository;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
@@ -22,6 +31,10 @@ public class UserService implements IUserService {
 
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
+  private final StudentRepository studentRepository;
+  private final ParentRepository parentRepository;
+  private final TeacherRepository teacherRepository;
+  private final AdminRepository adminRepository;
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
 
@@ -54,6 +67,24 @@ public class UserService implements IUserService {
     user.setRole(role);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     role.getUsers().add(user);
+
+    if (role.getName() == RoleName.STUDENT) {
+      Student student = new Student();
+      student.setUser(user);
+      studentRepository.save(student);
+    } else if (role.getName() == RoleName.PARENT) {
+      Parent parent = new Parent();
+      parent.setUser(user);
+      parentRepository.save(parent);
+    } else if (role.getName() == RoleName.TEACHER) {
+      Teacher teacher = new Teacher();
+      teacher.setUser(user);
+      teacherRepository.save(teacher);
+    } else if (role.getName() == RoleName.ADMIN) {
+      Admin admin = new Admin();
+      admin.setUser(user);
+      adminRepository.save(admin);
+    }
     return userRepository.save(user);
   }
 

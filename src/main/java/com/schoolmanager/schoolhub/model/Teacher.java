@@ -37,6 +37,9 @@ public class Teacher {
   @JsonFormat(pattern = "dd-MM-yyyy")
   private LocalDate hireDate;
 
+  @OneToOne(mappedBy = "homeroomTeacher")
+  private Classroom classroom;
+
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "teacher_subject", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "subject_id"))
   private List<Subject> subjects;

@@ -31,7 +31,7 @@ public class Student {
   private LocalDate enrollmentDate;
 
   @ManyToOne
-  @JoinColumn(name = "classroom_id", nullable = false)
+  @JoinColumn(name = "classroom_id", nullable = true)
   private Classroom classroom;
 
   @OneToOne

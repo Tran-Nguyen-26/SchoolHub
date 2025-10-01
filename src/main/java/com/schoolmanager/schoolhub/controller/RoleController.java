@@ -3,6 +3,7 @@ package com.schoolmanager.schoolhub.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ public class RoleController {
 
   private final IRoleService roleService;
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllRoles() {
     List<Role> roles = roleService.getAllRoles();
@@ -33,6 +35,7 @@ public class RoleController {
     return ResponseEntity.ok(new ApiResponse("success", roleDtos));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getRoleById(@PathVariable Long id) {
     Role role = roleService.getRoleById(id);
@@ -40,6 +43,7 @@ public class RoleController {
     return ResponseEntity.ok(new ApiResponse("success", roleDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/name/{name}")
   public ResponseEntity<ApiResponse> getRoleByName(@PathVariable RoleName name) {
     Role role = roleService.getRoleByName(name);
@@ -47,6 +51,7 @@ public class RoleController {
     return ResponseEntity.ok(new ApiResponse("success", roleDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add/permission")
   public ResponseEntity<ApiResponse> assignPermissionsToRole(@PathVariable Long id,
       @RequestBody List<PermissionName> permissionNames) {

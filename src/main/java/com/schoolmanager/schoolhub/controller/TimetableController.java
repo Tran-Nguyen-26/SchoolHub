@@ -3,6 +3,7 @@ package com.schoolmanager.schoolhub.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class TimetableController {
 
   private final ITimetableService timetableService;
 
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getTimetableById(@PathVariable Long id) {
     Timetable timetable = timetableService.getTimetableById(id);
@@ -29,6 +31,7 @@ public class TimetableController {
     return ResponseEntity.ok(new ApiResponse("success", timetableDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/classroom/{classroomId}/semester/{semesterId}")
   public ResponseEntity<ApiResponse> getTimetableByClassroomAndSemester(@PathVariable Long classroomId,
       @PathVariable Long semesterId) {
@@ -37,6 +40,7 @@ public class TimetableController {
     return ResponseEntity.ok(new ApiResponse("success", timetableDtos));
   }
 
+  @PreAuthorize("hasRole('ADMIN') or (hasRole('TEACHER') and #teacherId == authentication.principal.id)")
   @GetMapping("/teacher/{teacherId}/semester/{semesterId}")
   public ResponseEntity<ApiResponse> getTimetablesByTeacherAndSemester(@PathVariable Long teacherId,
       @PathVariable Long semesterId) {

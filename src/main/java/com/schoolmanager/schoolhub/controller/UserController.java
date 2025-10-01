@@ -3,6 +3,7 @@ package com.schoolmanager.schoolhub.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ public class UserController {
 
   private final IUserService userService;
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllUsers() {
     List<User> users = userService.getAllUsers();
@@ -34,6 +36,7 @@ public class UserController {
     return ResponseEntity.ok(new ApiResponse("success", userDtos));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
     User user = userService.getUserById(id);
@@ -41,6 +44,7 @@ public class UserController {
     return ResponseEntity.ok(new ApiResponse("success", userDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/email/{email}")
   public ResponseEntity<ApiResponse> getUserById(@PathVariable String email) {
     User user = userService.getUserByEmail(email);
@@ -48,6 +52,7 @@ public class UserController {
     return ResponseEntity.ok(new ApiResponse("success", userDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/students")
   public ResponseEntity<ApiResponse> getAllStudentUsers() {
     List<User> users = userService.getAllStudentUsers();
@@ -55,6 +60,7 @@ public class UserController {
     return ResponseEntity.ok(new ApiResponse("success", userDtos));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addUser(@RequestBody AddUserRequest request) {
     User user = userService.addUser(request);
@@ -62,6 +68,7 @@ public class UserController {
     return ResponseEntity.ok(new ApiResponse("success", userDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updateUserById(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
     User user = userService.updateUserById(id, request);

@@ -16,4 +16,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
   @Query("Select s from Student s where s.classroom.grade.level = :level")
   List<Student> findByGradeLevel(String level);
+
+  boolean existsByIdAndClassroomId(Long studentId, Long classroomId);
+
+  boolean existsByIdAndClassroomName(Long studentId, String classroomName);
 }
