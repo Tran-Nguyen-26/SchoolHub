@@ -38,4 +38,11 @@ public class SchoolYear {
 
   @OneToMany(mappedBy = "schoolYear")
   private List<Semester> semesters = new ArrayList<>();
+
+  public SchoolYear(String yearName, LocalDate startDate, LocalDate endDate) {
+    this.yearName = yearName;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
 }

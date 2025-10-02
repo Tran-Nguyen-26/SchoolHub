@@ -9,6 +9,8 @@ import com.schoolmanager.schoolhub.dto.StudentDto;
 import com.schoolmanager.schoolhub.model.Student;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.repository.StudentRepository;
+import com.schoolmanager.schoolhub.request.UpdateStudentRequest;
+import com.schoolmanager.schoolhub.service.user.IUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class StudentService implements IStudentService {
 
   private final StudentRepository studentRepository;
+  private final IUserService userService;
   private final ModelMapper modelMapper;
 
   @Override
@@ -43,6 +46,25 @@ public class StudentService implements IStudentService {
   public List<Student> getStudentsByGradeLevel(String level) {
     return studentRepository.findByGradeLevel(level);
   }
+
+  // @Override
+  // public Student updateInfoStudent(Long studentId, UpdateStudentRequest
+  // request) {
+  // Student student = getStudentById(studentId);
+  // User user = userService.getUserById(studentId);
+  // if (request.getUsername() != null)
+  // user.setUsername(request.getUsername());
+  // if (request.getEmail() != null)
+  // user.setEmail(request.getEmail());
+  // if (request.getPhone() != null)
+  // user.setPhone(request.getPhone());
+  // if (request.getAddress() != null)
+  // user.setAddress(request.getAddress());
+  // if (request.getDob() != null)
+  // user.setDob(request.getDob());
+  // if (request.getGender() != null)
+  // user.setGender(request.getGender());
+  // }
 
   @Override
   public StudentDto convertToDto(Student student) {

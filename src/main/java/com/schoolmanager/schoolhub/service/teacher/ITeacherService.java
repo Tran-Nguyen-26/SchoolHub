@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.schoolmanager.schoolhub.dto.TeacherDto;
 import com.schoolmanager.schoolhub.model.Teacher;
+import com.schoolmanager.schoolhub.request.AssignSubjectsToTeacherRequest;
 
 public interface ITeacherService {
   List<Teacher> getAllTeachers();
@@ -11,6 +12,8 @@ public interface ITeacherService {
   Teacher getTeacherById(Long id);
 
   List<Teacher> getTeachersBySubjectName(String subjectName);
+
+  Teacher assignSubjectsToTeacher(Long teacherId, AssignSubjectsToTeacherRequest request);
 
   TeacherDto convertToDto(Teacher teacher);
 

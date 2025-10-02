@@ -48,4 +48,11 @@ public class Semester {
 
   @OneToMany(mappedBy = "semester", cascade = CascadeType.ALL)
   private List<Timetable> timetables;
+
+  public Semester(String semesterName, LocalDate startDate, LocalDate endDate) {
+    this.semesterName = semesterName;
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+
 }
