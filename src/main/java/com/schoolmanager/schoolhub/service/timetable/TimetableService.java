@@ -36,6 +36,7 @@ public class TimetableService implements ITimetableService {
   @Override
   public TimetableDto convertToDto(Timetable timetable) {
     TimetableDto timetableDto = modelMapper.map(timetable, TimetableDto.class);
+    timetableDto.setPeriodNumber(timetable.getPeriod().getPeriodNumber());
     timetableDto.setClassroomName(timetable.getClassroom().getName());
     timetableDto.setTeacher(timetable.getTeacher().getUser().getUsername());
     timetableDto.setSubjectName(timetable.getSubject().getName());

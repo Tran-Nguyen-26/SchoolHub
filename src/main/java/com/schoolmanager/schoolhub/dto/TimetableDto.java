@@ -16,11 +16,13 @@ public class TimetableDto {
   @Enumerated(EnumType.STRING)
   private DayOfWeek dayOfWeek;
 
-  @JsonFormat(pattern = "HH:mm:ss")
-  private LocalTime startTime;
+  private int periodNumber;
 
-  @JsonFormat(pattern = "HH:mm:ss")
-  private LocalTime endTime;
+  // @JsonFormat(pattern = "HH:mm:ss")
+  // private LocalTime startTime;
+
+  // @JsonFormat(pattern = "HH:mm:ss")
+  // private LocalTime endTime;
 
   private String classroomName;
   private String teacher;

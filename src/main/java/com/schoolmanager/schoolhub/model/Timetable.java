@@ -1,8 +1,5 @@
 package com.schoolmanager.schoolhub.model;
 
-import java.time.LocalTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolmanager.schoolhub.enums.DayOfWeek;
 
 import jakarta.persistence.Entity;
@@ -31,11 +28,9 @@ public class Timetable {
   @Enumerated(EnumType.STRING)
   private DayOfWeek dayOfWeek;
 
-  @JsonFormat(pattern = "HH:mm:ss")
-  private LocalTime startTime;
-
-  @JsonFormat(pattern = "HH:mm:ss")
-  private LocalTime endTime;
+  @ManyToOne
+  @JoinColumn(name = "period_id")
+  private Period period;
 
   @ManyToOne
   @JoinColumn(name = "classroom_id")
