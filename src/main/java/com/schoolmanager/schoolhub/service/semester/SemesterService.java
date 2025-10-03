@@ -28,6 +28,11 @@ public class SemesterService implements ISemesterService {
   }
 
   @Override
+  public Semester getSemesterBySemesterNameAndSchoolYearName(String semesterName, String schoolYearName) {
+    return semesterRepository.findBySemesterNameAndSchoolYearName(semesterName, schoolYearName);
+  }
+
+  @Override
   public List<Semester> getSemestersBySchoolYearId(Long schoolYearId) {
     return semesterRepository.findBySchoolYearId(schoolYearId);
   }

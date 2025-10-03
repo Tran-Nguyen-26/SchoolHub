@@ -28,6 +28,11 @@ public class SubjectService implements ISubjectService {
   }
 
   @Override
+  public Subject getSubjectByNameAndGradeLevel(String name, String level) {
+    return subjectRepository.findByNameAndGradeLevel(name, level);
+  }
+
+  @Override
   public List<Subject> getAllSubjects() {
     return subjectRepository.findAll();
   }

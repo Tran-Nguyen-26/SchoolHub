@@ -12,4 +12,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
   @Query("Select t from Teacher t join t.subjects s where s.name = :subjectName")
   List<Teacher> findTeachersBySubjectName(String subjectName);
 
+  @Query("Select t from Teacher t join t.user u where u.email = :email")
+  Teacher findByUserEmail(String email);
+
 }

@@ -6,11 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.TimetableDto;
 import com.schoolmanager.schoolhub.model.Timetable;
+import com.schoolmanager.schoolhub.request.AddTimetableRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.timetable.ITimetableService;
 
@@ -47,5 +50,13 @@ public class TimetableController {
     List<Timetable> timetables = timetableService.getAllTimetablesByTeacherIdAndSemesterId(teacherId, semesterId);
     List<TimetableDto> timetableDtos = timetableService.convertListToDto(timetables);
     return ResponseEntity.ok(new ApiResponse("success", timetableDtos));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/add")
+  public ResponseEntity<ApiResponse> addTimetable(@RequestBody AddTimetableRequest request) {
+    Timetable timetable = timetableService.addTimetable(request);
+    TimetableDto timetableDto = timetableService.convertToDto(timetable);
+    return ResponseEntity.ok(new ApiResponse("success", timetableDto));
   }
 }

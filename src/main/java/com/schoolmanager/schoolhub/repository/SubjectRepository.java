@@ -18,4 +18,7 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
   boolean existsByNameAndGradeId(String subjectName, Long id);
 
+  @Query("Select s from Subject s where s.name = :name and s.grade.level = :level")
+  Subject findByNameAndGradeLevel(String name, String level);
+
 }

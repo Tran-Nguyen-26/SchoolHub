@@ -9,6 +9,8 @@ import com.schoolmanager.schoolhub.request.AddSemesterRequest;
 public interface ISemesterService {
   Semester getSemesterById(Long id);
 
+  Semester getSemesterBySemesterNameAndSchoolYearName(String semesterName, String schoolYearName);
+
   List<Semester> getSemestersBySchoolYearId(Long schoolYearId);
 
   List<Semester> addSemesters(AddSemesterRequest request);

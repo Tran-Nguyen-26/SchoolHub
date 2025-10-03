@@ -34,6 +34,11 @@ public class TeacherService implements ITeacherService {
   }
 
   @Override
+  public Teacher getTeacherByUserEmail(String email) {
+    return teacherRepository.findByUserEmail(email);
+  }
+
+  @Override
   public List<Teacher> getTeachersBySubjectName(String subjectName) {
     return teacherRepository.findTeachersBySubjectName(subjectName);
   }

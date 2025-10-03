@@ -11,6 +11,8 @@ public interface ITeacherService {
 
   Teacher getTeacherById(Long id);
 
+  Teacher getTeacherByUserEmail(String email);
+
   List<Teacher> getTeachersBySubjectName(String subjectName);
 
   Teacher assignSubjectsToTeacher(Long teacherId, AssignSubjectsToTeacherRequest request);
