@@ -2,6 +2,8 @@ package com.schoolmanager.schoolhub.service.user;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.schoolmanager.schoolhub.dto.UserDto;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
@@ -23,4 +25,6 @@ public interface IUserService {
   UserDto convertToDto(User user);
 
   List<UserDto> convertListToDto(List<User> users);
+
+  void importUserStudents(MultipartFile file);
 }

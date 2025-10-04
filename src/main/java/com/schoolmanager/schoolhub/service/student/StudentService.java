@@ -9,8 +9,6 @@ import com.schoolmanager.schoolhub.dto.StudentDto;
 import com.schoolmanager.schoolhub.model.Student;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.repository.StudentRepository;
-import com.schoolmanager.schoolhub.request.UpdateStudentRequest;
-import com.schoolmanager.schoolhub.service.user.IUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 public class StudentService implements IStudentService {
 
   private final StudentRepository studentRepository;
-  private final IUserService userService;
   private final ModelMapper modelMapper;
 
   @Override
