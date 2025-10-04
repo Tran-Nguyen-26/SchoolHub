@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.SemesterDto;
@@ -30,6 +31,14 @@ public class SemesterController {
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getSemesterById(@PathVariable Long id) {
     Semester semester = semesterService.getSemesterById(id);
+    SemesterDto semesterDto = semesterService.convertToDto(semester);
+    return ResponseEntity.ok(new ApiResponse("success", semesterDto));
+  }
+
+  @GetMapping("/by-name-and-schoolyear")
+  public ResponseEntity<ApiResponse> getSemesterByNameAndSchoolYearName(@RequestParam String semesterName,
+      @RequestParam String schoolYearName) {
+    Semester semester = semesterService.getSemesterBySemesterNameAndSchoolYearName(semesterName, schoolYearName);
     SemesterDto semesterDto = semesterService.convertToDto(semester);
     return ResponseEntity.ok(new ApiResponse("success", semesterDto));
   }

@@ -10,4 +10,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
   List<Event> findByClassroomId(Long clasroomId);
 
+  List<Event> findByClassroomIdAndSemesterId(Long classroomId, Long semesterId);
+
 }

@@ -80,9 +80,13 @@ public class TimetableService implements ITimetableService {
     Timetable timetable = new Timetable();
     timetable.setDayOfWeek(request.getDayOfWeek());
     timetable.setPeriod(period);
+    period.getTimetables().add(timetable);
     timetable.setClassroom(classroom);
+    classroom.getTimetables().add(timetable);
     timetable.setTeacher(teacher);
+    teacher.getTimetables().add(timetable);
     timetable.setSubject(subject);
+    subject.getTimetables().add(timetable);
     timetable.setSemester(semester);
     return timetableRepository.save(timetable);
   }
