@@ -38,6 +38,7 @@ public class ParentService implements IParentService {
   public ParentDto convertToDto(Parent parent) {
     User user = parent.getUser();
     ParentDto parentDto = modelMapper.map(user, ParentDto.class);
+    parentDto.setRole(user.getRole().getName().toString());
     parentDto.setOccupation(parent.getOccupation());
     return parentDto;
   }

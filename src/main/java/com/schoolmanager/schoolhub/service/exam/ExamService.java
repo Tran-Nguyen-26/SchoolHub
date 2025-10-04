@@ -11,7 +11,6 @@ import com.schoolmanager.schoolhub.model.Subject;
 import com.schoolmanager.schoolhub.repository.ExamRepository;
 import com.schoolmanager.schoolhub.request.AddExamRequest;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
-import com.schoolmanager.schoolhub.service.score.IScoreService;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
 import com.schoolmanager.schoolhub.service.subject.ISubjectService;
 
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class ExamService implements IExamService {
 
   private final ExamRepository examRepository;
-  private final IScoreService scoreService;
   private final IClassroomService classroomService;
   private final ISemesterService semesterService;
   private final ISubjectService subjectService;
@@ -58,8 +56,6 @@ public class ExamService implements IExamService {
     examDto.setSubjectName(exam.getSubject().getName());
     examDto.setSemesterName(exam.getSemester().getSemesterName());
     examDto.setSchoolYearName(exam.getSemester().getSchoolYear().getYearName());
-    if (exam.getScores() != null)
-      examDto.setScoreDtos(scoreService.convertListToDto(exam.getScores()));
     return examDto;
   }
 }
