@@ -44,25 +44,6 @@ public class StudentService implements IStudentService {
     return studentRepository.findByGradeLevel(level);
   }
 
-  // @Override
-  // public Student updateInfoStudent(Long studentId, UpdateStudentRequest
-  // request) {
-  // Student student = getStudentById(studentId);
-  // User user = userService.getUserById(studentId);
-  // if (request.getUsername() != null)
-  // user.setUsername(request.getUsername());
-  // if (request.getEmail() != null)
-  // user.setEmail(request.getEmail());
-  // if (request.getPhone() != null)
-  // user.setPhone(request.getPhone());
-  // if (request.getAddress() != null)
-  // user.setAddress(request.getAddress());
-  // if (request.getDob() != null)
-  // user.setDob(request.getDob());
-  // if (request.getGender() != null)
-  // user.setGender(request.getGender());
-  // }
-
   @Override
   public StudentDto convertToDto(Student student) {
     StudentDto studentDto = new StudentDto();

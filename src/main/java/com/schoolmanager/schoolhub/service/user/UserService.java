@@ -1,12 +1,10 @@
 package com.schoolmanager.schoolhub.service.user;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.schoolmanager.schoolhub.dto.UserDto;
 import com.schoolmanager.schoolhub.enums.RoleName;
@@ -24,7 +22,6 @@ import com.schoolmanager.schoolhub.repository.TeacherRepository;
 import com.schoolmanager.schoolhub.repository.UserRepository;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
-import com.schoolmanager.schoolhub.service.user.helper.StudentExcelHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +37,6 @@ public class UserService implements IUserService {
   private final AdminRepository adminRepository;
   private final ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
-  private final StudentExcelHelper studentExcelHelper;
 
   @Override
   public List<User> getAllUsers() {
@@ -124,17 +120,5 @@ public class UserService implements IUserService {
   @Override
   public List<UserDto> convertListToDto(List<User> users) {
     return users.stream().map(this::convertToDto).toList();
-  }
-
-  @Override
-  public void importUserStudents(MultipartFile file) {
-    try {
-      List<AddUserRequest> userStudentRequests = studentExcelHelper.excelToUserStudents(file.getInputStream());
-      for (AddUserRequest addUserStudentRequest : userStudentRequests) {
-        this.addUser(addUserStudentRequest);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("import fail: " + e.getMessage());
-    }
   }
 }

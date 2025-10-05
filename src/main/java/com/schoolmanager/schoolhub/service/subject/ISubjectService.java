@@ -9,6 +9,8 @@ import com.schoolmanager.schoolhub.request.AddSubjectRequest;
 public interface ISubjectService {
   Subject getSubjectById(Long id);
 
+  List<Subject> getSubjectByNames(List<String> names);
+
   Subject getSubjectByNameAndGradeLevel(String name, String level);
 
   List<Subject> getAllSubjects();
