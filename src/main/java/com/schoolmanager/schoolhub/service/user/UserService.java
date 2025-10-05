@@ -2,7 +2,10 @@ package com.schoolmanager.schoolhub.service.user;
 
 import java.util.List;
 
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,9 @@ import com.schoolmanager.schoolhub.repository.StudentRepository;
 import com.schoolmanager.schoolhub.repository.TeacherRepository;
 import com.schoolmanager.schoolhub.repository.UserRepository;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
+import com.schoolmanager.schoolhub.request.ChangePasswordRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
+import com.schoolmanager.schoolhub.security.user.SchoolUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -120,5 +125,21 @@ public class UserService implements IUserService {
   @Override
   public List<UserDto> convertListToDto(List<User> users) {
     return users.stream().map(this::convertToDto).toList();
+  }
+
+  @Override
+  public void changePassword(ChangePasswordRequest request) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    SchoolUserDetails userDetails = (SchoolUserDetails) authentication.getPrincipal();
+    String email = userDetails.getEmail();
+    User user = getUserByEmail(email);
+    if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+      throw new RuntimeException("Sai mat khau cu");
+    }
+    if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+      throw new RuntimeException("Xac nhan lai mat khau moi");
+    }
+    user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    userRepository.save(user);
   }
 }

@@ -12,4 +12,6 @@ public interface ClassroomRepository extends JpaRepository<Classroom, Long> {
 
   List<Classroom> findByGrade_level(String gradeName);
 
+  boolean existsByName(String string);
+
 }

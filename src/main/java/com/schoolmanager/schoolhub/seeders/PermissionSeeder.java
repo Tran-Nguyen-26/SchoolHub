@@ -3,6 +3,7 @@ package com.schoolmanager.schoolhub.seeders;
 import java.util.Arrays;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.schoolmanager.schoolhub.enums.PermissionName;
@@ -11,6 +12,7 @@ import com.schoolmanager.schoolhub.model.Permission;
 
 import lombok.RequiredArgsConstructor;
 
+@Order(1)
 @Component
 @RequiredArgsConstructor
 public class PermissionSeeder implements CommandLineRunner {

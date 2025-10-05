@@ -49,7 +49,8 @@ public class StudentService implements IStudentService {
     StudentDto studentDto = new StudentDto();
     User user = student.getUser();
     studentDto = modelMapper.map(user, StudentDto.class);
-    studentDto.setClassroomName(student.getClassroom().getName());
+    if (student.getClassroom() != null)
+      studentDto.setClassroomName(student.getClassroom().getName());
     return studentDto;
   }
 

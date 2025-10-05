@@ -8,4 +8,6 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
 
   Grade findByLevel(String level);
 
+  boolean existsByLevel(String valueOf);
+
 }

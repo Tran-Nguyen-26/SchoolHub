@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.schoolmanager.schoolhub.dto.UserDto;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
+import com.schoolmanager.schoolhub.request.ChangePasswordRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.user.IUserService;
@@ -74,5 +75,12 @@ public class UserController {
     User user = userService.updateUserById(id, request);
     UserDto userDto = userService.convertToDto(user);
     return ResponseEntity.ok(new ApiResponse("success", userDto));
+  }
+
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT') or hasRole('PARENT')")
+  @PutMapping("/change-password")
+  public ResponseEntity<ApiResponse> changePassword(@RequestBody ChangePasswordRequest request) {
+    userService.changePassword(request);
+    return ResponseEntity.ok(new ApiResponse("change password successfully", null));
   }
 }

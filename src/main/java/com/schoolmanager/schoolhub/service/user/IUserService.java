@@ -5,6 +5,7 @@ import java.util.List;
 import com.schoolmanager.schoolhub.dto.UserDto;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
+import com.schoolmanager.schoolhub.request.ChangePasswordRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
 
 public interface IUserService {
@@ -23,4 +24,6 @@ public interface IUserService {
   UserDto convertToDto(User user);
 
   List<UserDto> convertListToDto(List<User> users);
+
+  void changePassword(ChangePasswordRequest request);
 }
