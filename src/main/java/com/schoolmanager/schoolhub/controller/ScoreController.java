@@ -42,7 +42,7 @@ public class ScoreController {
     return ResponseEntity.ok(new ApiResponse("success", scoreDtos));
   }
 
-  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or (hasRole('STUDENT') and @securityService.isStudentInExamId(#examId))")
   @GetMapping("/exam/{examId}")
   public ResponseEntity<ApiResponse> getScoreByExamId(@PathVariable Long examId) {
     List<Score> scores = scoreService.getScoresByExamId(examId);
