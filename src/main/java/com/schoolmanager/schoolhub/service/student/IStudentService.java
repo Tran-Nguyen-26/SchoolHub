@@ -14,7 +14,11 @@ public interface IStudentService {
 
   List<Student> getStudentsByClassroomName(String classroomName);
 
+  List<Student> getStudentsByGradeId(Long gradeId);
+
   List<Student> getStudentsByGradeLevel(String level);
+
+  Student addStudentToClassroom(Long classroomId, Long studentId);
 
   StudentDto convertToDto(Student student);
 

@@ -20,4 +20,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
   boolean existsByIdAndClassroomId(Long studentId, Long classroomId);
 
   boolean existsByIdAndClassroomName(Long studentId, String classroomName);
+
+  @Query("Select s from Student s where s.classroom.grade.id = :gradeId")
+  List<Student> findByGradeId(Long gradeId);
 }

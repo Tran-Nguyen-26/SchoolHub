@@ -7,12 +7,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-public class AddExamRequest {
-  @JsonFormat(pattern = "dd-MM-yyyy")
-  private LocalDate examDate;
+public class UpdateSchoolYearRequest {
+  private String yearName;
 
-  private String examType;
-  private Long classroomId;
-  private Long semesterId;
-  private Long subjectId;
+  @JsonFormat(pattern = "dd-MM-yyyy")
+  private LocalDate startDate;
+
+  @JsonFormat(pattern = "dd-MM-yyyy")
+  private LocalDate endDate;
 }

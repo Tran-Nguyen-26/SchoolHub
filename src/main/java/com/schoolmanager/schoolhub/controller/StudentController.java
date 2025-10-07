@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,5 +62,14 @@ public class StudentController {
     List<Student> students = studentService.getStudentsByGradeLevel(level);
     List<StudentDto> studentDtos = studentService.convertListToDto(students);
     return ResponseEntity.ok(new ApiResponse("success", studentDtos));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping("/{studentId}/add-to-classroom/{classroomId}")
+  public ResponseEntity<ApiResponse> addStudentToClassroom(@PathVariable Long studentId,
+      @PathVariable Long classroomId) {
+    Student student = studentService.addStudentToClassroom(classroomId, studentId);
+    StudentDto studentDto = studentService.convertToDto(student);
+    return ResponseEntity.ok(new ApiResponse("success", studentDto));
   }
 }

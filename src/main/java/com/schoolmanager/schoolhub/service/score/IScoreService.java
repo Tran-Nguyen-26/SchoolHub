@@ -5,6 +5,7 @@ import java.util.List;
 import com.schoolmanager.schoolhub.dto.ScoreDto;
 import com.schoolmanager.schoolhub.model.Score;
 import com.schoolmanager.schoolhub.request.AssignScoreRequest;
+import com.schoolmanager.schoolhub.request.UpdateScoreRequest;
 
 public interface IScoreService {
 
@@ -17,6 +18,8 @@ public interface IScoreService {
   Score getScoreByStudentIdAndExamId(Long studentId, Long examId);
 
   Score assignScoreToStudent(Long studentId, Long examId, AssignScoreRequest request);
+
+  Score updateScore(Long scoreId, UpdateScoreRequest request);
 
   ScoreDto convertToDto(Score score);
 

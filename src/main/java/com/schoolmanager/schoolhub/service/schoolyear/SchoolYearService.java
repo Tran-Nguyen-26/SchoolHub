@@ -10,6 +10,7 @@ import com.schoolmanager.schoolhub.model.SchoolYear;
 import com.schoolmanager.schoolhub.model.Semester;
 import com.schoolmanager.schoolhub.repository.SchoolYearRepository;
 import com.schoolmanager.schoolhub.request.AddNewSchoolYearRequest;
+import com.schoolmanager.schoolhub.request.UpdateSchoolYearRequest;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,13 @@ public class SchoolYearService implements ISchoolYearService {
   @Override
   public List<SchoolYear> getAllSchoolYears() {
     return schoolYearRepository.findAll();
+  }
+
+  @Override
+  public SchoolYear updateSchoolYear(Long id, UpdateSchoolYearRequest request) {
+    SchoolYear schoolYear = getSchoolYearById(id);
+    schoolYear = modelMapper.map(request, SchoolYear.class);
+    return schoolYearRepository.save(schoolYear);
   }
 
   @Override

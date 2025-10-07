@@ -10,6 +10,7 @@ import com.schoolmanager.schoolhub.model.Grade;
 import com.schoolmanager.schoolhub.model.Subject;
 import com.schoolmanager.schoolhub.repository.SubjectRepository;
 import com.schoolmanager.schoolhub.request.AddSubjectRequest;
+import com.schoolmanager.schoolhub.request.UpdateSubjectRequest;
 import com.schoolmanager.schoolhub.service.grade.IGradeService;
 
 import lombok.RequiredArgsConstructor;
@@ -54,20 +55,21 @@ public class SubjectService implements ISubjectService {
 
   @Override
   public Subject addSubject(AddSubjectRequest request) {
-    if (existsByNameAndGradeLevel(request.getName(), request.getLevel()))
-      throw new RuntimeException("mon hoc da ton tais");
+    Grade grade = gradeService.getGradeById(request.getGradeId());
+    if (subjectRepository.existsByNameAndGradeId(request.getName(), grade.getId())) {
+      throw new RuntimeException("mon hoc da ton tai");
+    }
     Subject subject = modelMapper.map(request, Subject.class);
-    Grade grade = gradeService.getGradeByLevel(request.getLevel());
     subject.setGrade(grade);
-    grade.getSubjects().add(subject);
     return subjectRepository.save(subject);
   }
 
-  private boolean existsByNameAndGradeLevel(String subjectName, String level) {
-    Grade grade = gradeService.getGradeByLevel(level);
-    if (grade == null)
-      throw new RuntimeException("khong co khoi nay");
-    return subjectRepository.existsByNameAndGradeId(subjectName, grade.getId());
+  @Override
+  public Subject updateSubject(Long id, UpdateSubjectRequest request) {
+    Grade grade = gradeService.getGradeById(request.getGradeId());
+    Subject subject = modelMapper.map(request, Subject.class);
+    subject.setGrade(grade);
+    return subjectRepository.save(subject);
   }
 
   @Override

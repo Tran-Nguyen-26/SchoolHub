@@ -1,7 +1,5 @@
 package com.schoolmanager.schoolhub.dto;
 
-import java.util.List;
-
 import lombok.Data;
 
 @Data
@@ -10,5 +8,4 @@ public class ClassroomDto {
   private String name;
   private String homeroomTeacher;
   private int totalStudents;
-  private List<StudentDto> studentDtos;
 }

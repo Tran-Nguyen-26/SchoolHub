@@ -1,7 +1,6 @@
 package com.schoolmanager.schoolhub.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -18,5 +17,4 @@ public class ExamDto {
   private String subjectName;
   private String semesterName;
   private String schoolYearName;
-  private List<ScoreDto> scoreDtos;
 }

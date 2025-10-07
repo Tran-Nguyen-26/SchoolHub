@@ -15,7 +15,6 @@ public class AddEventRequest {
   private LocalDate eventDate;
 
   private String location;
-  private String classroomName;
-  private String semesterName;
-  private String schoolYearName;
+  private Long classroomId;
+  private Long semesterId;
 }

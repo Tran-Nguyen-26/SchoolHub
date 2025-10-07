@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.schoolmanager.schoolhub.dto.SemesterDto;
 import com.schoolmanager.schoolhub.model.Semester;
 import com.schoolmanager.schoolhub.request.AddSemesterRequest;
+import com.schoolmanager.schoolhub.request.UpdateSemesterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
 
@@ -57,5 +59,13 @@ public class SemesterController {
     List<Semester> semesters = semesterService.addSemesters(request);
     List<SemesterDto> semesterDtos = semesterService.convertListToDto(semesters);
     return ResponseEntity.ok(new ApiResponse("success", semesterDtos));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping("/update/{id}")
+  public ResponseEntity<ApiResponse> updateSemester(@PathVariable Long id, @RequestBody UpdateSemesterRequest request) {
+    Semester semester = semesterService.updateSemester(id, request);
+    SemesterDto semesterDto = semesterService.convertToDto(semester);
+    return ResponseEntity.ok(new ApiResponse("success", semesterDto));
   }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.schoolmanager.schoolhub.dto.SubjectDto;
 import com.schoolmanager.schoolhub.model.Subject;
 import com.schoolmanager.schoolhub.request.AddSubjectRequest;
+import com.schoolmanager.schoolhub.request.UpdateSubjectRequest;
 
 public interface ISubjectService {
   Subject getSubjectById(Long id);
@@ -20,6 +21,8 @@ public interface ISubjectService {
   List<Subject> getSubjectsByGradeLevel(String level);
 
   Subject addSubject(AddSubjectRequest request);
+
+  Subject updateSubject(Long id, UpdateSubjectRequest request);
 
   SubjectDto convertToDto(Subject subject);
 

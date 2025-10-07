@@ -2,7 +2,6 @@ package com.schoolmanager.schoolhub.service.user;
 
 import java.util.List;
 
-import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,6 +63,11 @@ public class UserService implements IUserService {
   }
 
   @Override
+  public List<User> getAllTeacherUsers() {
+    return userRepository.findALlTeacherUsers();
+  }
+
+  @Override
   public User addUser(AddUserRequest request) {
     if (userExists(request.getEmail()))
       throw new RuntimeException("user already exists");
@@ -71,7 +75,6 @@ public class UserService implements IUserService {
     Role role = roleRepository.findByName(request.getRole());
     user.setRole(role);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
-    role.getUsers().add(user);
 
     if (role.getName() == RoleName.STUDENT) {
       Student student = new Student();

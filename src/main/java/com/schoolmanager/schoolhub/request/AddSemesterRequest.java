@@ -24,5 +24,5 @@ public class AddSemesterRequest {
   @JsonFormat(pattern = "dd-MM-yyyy")
   private LocalDate endDate2;
 
-  private String schoolYearName;
+  private Long schoolYearId;
 }

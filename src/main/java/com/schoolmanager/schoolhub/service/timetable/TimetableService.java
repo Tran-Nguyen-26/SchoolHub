@@ -14,6 +14,7 @@ import com.schoolmanager.schoolhub.model.Teacher;
 import com.schoolmanager.schoolhub.model.Timetable;
 import com.schoolmanager.schoolhub.repository.TimetableRepository;
 import com.schoolmanager.schoolhub.request.AddTimetableRequest;
+import com.schoolmanager.schoolhub.request.UpdateTimetableRequest;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
 import com.schoolmanager.schoolhub.service.period.IPeriodService;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
@@ -51,44 +52,71 @@ public class TimetableService implements ITimetableService {
 
   @Override
   public Timetable addTimetable(AddTimetableRequest request) {
-    Classroom classroom = classroomService.getClassroomByName(request.getClassroomName());
-    Semester semester = semesterService.getSemesterBySemesterNameAndSchoolYearName(request.getSemesterName(),
-        request.getSchoolYearName());
+    Classroom classroom = classroomService.getClassroomById(request.getClassroomId());
+    Semester semester = semesterService.getSemesterById(request.getSemesterId());
     List<Timetable> timetablesClassroom = getAllTimetablesByClassroomIdAndSemesterId(classroom.getId(),
         semester.getId());
     Timetable timetableClassroom_Period_Day = timetablesClassroom.stream()
         .filter(t -> t.getDayOfWeek().equals(request.getDayOfWeek())
-            && t.getPeriod().getPeriodNumber() == request.getPeriodNumber())
+            && t.getPeriod().getId() == request.getPeriodId())
         .findFirst()
         .orElse(null);
-    Teacher teacher = teacherService.getTeacherByUserEmail(request.getTeacherEmail());
+    Teacher teacher = teacherService.getTeacherById(request.getTeacherId());
     List<Timetable> timetablesTeacher = getAllTimetablesByTeacherIdAndSemesterId(teacher.getId(), semester.getId());
     Timetable timetableTeacher_Period_Day = timetablesTeacher.stream()
         .filter(t -> t.getDayOfWeek().equals(request.getDayOfWeek())
-            && t.getPeriod().getPeriodNumber() == request.getPeriodNumber())
+            && t.getPeriod().getId() == request.getPeriodId())
         .findFirst()
         .orElse(null);
     boolean isTeachingSubject = teacher.getSubjects()
         .stream()
-        .anyMatch(subject -> subject.getName().equals(request.getSubjectName()));
+        .anyMatch(subject -> subject.getId() == request.getSubjectId());
     if (timetableClassroom_Period_Day != null || timetableTeacher_Period_Day != null || !isTeachingSubject) {
       throw new RuntimeException("add timetable fail");
     }
-    Period period = periodService.getPeriodByPeriodNumber(request.getPeriodNumber());
-    Subject subject = subjectService.getSubjectByNameAndGradeLevel(request.getSubjectName(),
-        classroom.getGrade().getLevel());
+    Period period = periodService.getPeriodById(request.getPeriodId());
+    Subject subject = subjectService.getSubjectById(request.getSubjectId());
     Timetable timetable = new Timetable();
     timetable.setDayOfWeek(request.getDayOfWeek());
     timetable.setPeriod(period);
-    period.getTimetables().add(timetable);
     timetable.setClassroom(classroom);
-    classroom.getTimetables().add(timetable);
     timetable.setTeacher(teacher);
-    teacher.getTimetables().add(timetable);
     timetable.setSubject(subject);
-    subject.getTimetables().add(timetable);
     timetable.setSemester(semester);
     return timetableRepository.save(timetable);
+  }
+
+  @Override
+  public Timetable updateTimetable(Long id, UpdateTimetableRequest request) {
+    Timetable timetable = getTimetableById(id);
+    if (request.getDayOfWeek() != null)
+      timetable.setDayOfWeek(request.getDayOfWeek());
+    if (request.getPeriodId() != null) {
+      Period period = periodService.getPeriodById(request.getPeriodId());
+      timetable.setPeriod(period);
+    }
+    if (request.getClassroomId() != null) {
+      Classroom classroom = classroomService.getClassroomById(request.getClassroomId());
+      timetable.setClassroom(classroom);
+    }
+    if (request.getTeacherId() != null) {
+      Teacher teacher = teacherService.getTeacherById(request.getTeacherId());
+      timetable.setTeacher(teacher);
+    }
+    if (request.getSubjectId() != null) {
+      Subject subject = subjectService.getSubjectById(request.getSubjectId());
+      timetable.setSubject(subject);
+    }
+    if (request.getSemesterId() != null) {
+      Semester semester = semesterService.getSemesterById(request.getSemesterId());
+      timetable.setSemester(semester);
+    }
+    return timetableRepository.save(timetable);
+  }
+
+  @Override
+  public void deleteTimetableById(Long id) {
+    timetableRepository.findById(id).ifPresentOrElse(timetableRepository::delete, () -> new RuntimeException("fail"));
   }
 
   @Override

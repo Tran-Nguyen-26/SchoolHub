@@ -62,7 +62,6 @@ public class ImportUserExcel implements IImportUserExcel {
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     Role role = roleService.getRoleByName(RoleName.STUDENT);
     user.setRole(role);
-    role.getUsers().add(user);
     Classroom classroom = classroomService.getClassroomByName(request.getClassroomName());
     Student student = new Student();
     student.setUser(user);
@@ -93,15 +92,11 @@ public class ImportUserExcel implements IImportUserExcel {
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     Role role = roleService.getRoleByName(RoleName.TEACHER);
     user.setRole(role);
-    role.getUsers().add(user);
     Teacher teacher = new Teacher();
     teacher.setHireDate(request.getHireDate());
     teacher.setUser(user);
     List<Subject> subjects = subjectService.getSubjectByNames(request.getSubjectNames());
     teacher.setSubjects(subjects);
-    for (Subject subject : subjects)
-      subject.getTeachers().add(teacher);
-    userRepository.save(user);
     return teacherRepository.save(teacher);
   }
 
@@ -124,19 +119,6 @@ public class ImportUserExcel implements IImportUserExcel {
     Score score = new Score();
     score.setScoreValue(request.getScoreValue());
     score.setExam(exam);
-    if (exam.getScores() != null) {
-      exam.getScores().add(score);
-    } else {
-      List<Score> scoresExam = new ArrayList<>(Arrays.asList(score));
-      exam.setScores(scoresExam);
-    }
-    score.setExam(exam);
-    if (student.getScores() != null) {
-      student.getScores().add(score);
-    } else {
-      List<Score> scores = new ArrayList<>(Arrays.asList(score));
-      student.setScores(scores);
-    }
     score.setStudent(student);
     return scoreRepository.save(score);
   }

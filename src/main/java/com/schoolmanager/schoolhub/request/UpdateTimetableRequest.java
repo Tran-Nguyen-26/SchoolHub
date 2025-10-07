@@ -2,16 +2,11 @@ package com.schoolmanager.schoolhub.request;
 
 import com.schoolmanager.schoolhub.enums.DayOfWeek;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 @Data
-public class AddTimetableRequest {
-
-  @Enumerated(EnumType.STRING)
+public class UpdateTimetableRequest {
   private DayOfWeek dayOfWeek;
-
   private Long periodId;
   private Long classroomId;
   private Long teacherId;

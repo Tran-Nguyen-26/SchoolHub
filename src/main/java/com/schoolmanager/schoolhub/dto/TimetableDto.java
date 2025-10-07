@@ -1,8 +1,5 @@
 package com.schoolmanager.schoolhub.dto;
 
-import java.time.LocalTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.schoolmanager.schoolhub.enums.DayOfWeek;
 
 import jakarta.persistence.EnumType;
@@ -17,13 +14,6 @@ public class TimetableDto {
   private DayOfWeek dayOfWeek;
 
   private int periodNumber;
-
-  // @JsonFormat(pattern = "HH:mm:ss")
-  // private LocalTime startTime;
-
-  // @JsonFormat(pattern = "HH:mm:ss")
-  // private LocalTime endTime;
-
   private String classroomName;
   private String teacher;
   private String subjectName;

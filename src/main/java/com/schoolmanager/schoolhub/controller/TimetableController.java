@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.schoolmanager.schoolhub.dto.TimetableDto;
 import com.schoolmanager.schoolhub.model.Timetable;
 import com.schoolmanager.schoolhub.request.AddTimetableRequest;
+import com.schoolmanager.schoolhub.request.UpdateTimetableRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.timetable.ITimetableService;
 
@@ -58,5 +61,21 @@ public class TimetableController {
     Timetable timetable = timetableService.addTimetable(request);
     TimetableDto timetableDto = timetableService.convertToDto(timetable);
     return ResponseEntity.ok(new ApiResponse("success", timetableDto));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping("/update/{id}")
+  public ResponseEntity<ApiResponse> updateTimetable(@PathVariable Long id,
+      @RequestBody UpdateTimetableRequest request) {
+    Timetable timetable = timetableService.updateTimetable(id, request);
+    TimetableDto timetableDto = timetableService.convertToDto(timetable);
+    return ResponseEntity.ok(new ApiResponse("success", timetableDto));
+  }
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<ApiResponse> deleteTimetableById(@PathVariable Long id) {
+    timetableService.deleteTimetableById(id);
+    return ResponseEntity.ok(new ApiResponse("delete time table success", null));
   }
 }

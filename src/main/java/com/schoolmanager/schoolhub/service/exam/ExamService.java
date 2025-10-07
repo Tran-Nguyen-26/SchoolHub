@@ -33,20 +33,22 @@ public class ExamService implements IExamService {
 
   @Override
   public Exam addExam(AddExamRequest request) {
-    Classroom classroom = classroomService.getClassroomByName(request.getClassroomName());
-    Semester semester = semesterService.getSemesterBySemesterNameAndSchoolYearName(request.getSemesterName(),
-        request.getSchoolYearName());
-    Subject subject = subjectService.getSubjectByNameAndGradeLevel(request.getSubjectName(),
-        classroom.getGrade().getLevel());
+    Classroom classroom = classroomService.getClassroomById(request.getClassroomId());
+    Semester semester = semesterService.getSemesterById(request.getSemesterId());
+    Subject subject = subjectService.getSubjectById(request.getSubjectId());
     Exam exam = new Exam();
     exam.setExamDate(request.getExamDate());
     exam.setExamType(request.getExamType());
     exam.setClassroom(classroom);
-    classroom.getExams().add(exam);
     exam.setSemester(semester);
-    semester.getExams().add(exam);
     exam.setSubject(subject);
-    subject.getExams().add(exam);
+    return examRepository.save(exam);
+  }
+
+  @Override
+  public Exam updateExam(Long id, AddExamRequest request) {
+    Exam exam = getExamById(id);
+    exam = modelMapper.map(request, Exam.class);
     return examRepository.save(exam);
   }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.ClassroomDto;
 import com.schoolmanager.schoolhub.model.Classroom;
+import com.schoolmanager.schoolhub.request.AddNewClassroomRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
 
@@ -26,6 +27,14 @@ import lombok.RequiredArgsConstructor;
 public class ClassroomController {
 
   private final IClassroomService classroomService;
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/all")
+  public ResponseEntity<ApiResponse> getAllClassrooms() {
+    List<Classroom> classrooms = classroomService.getAllClassrooms();
+    List<ClassroomDto> classroomDtos = classroomService.convertListToDto(classrooms);
+    return ResponseEntity.ok(new ApiResponse("success", classroomDtos));
+  }
 
   @PreAuthorize("hasRole('ADMIN') or (hasRole('STUDENT') and @securityService.isStudentInClassroomId(#id)) or hasRole('TEACHER')")
   @GetMapping("/id/{id}")
@@ -53,8 +62,8 @@ public class ClassroomController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> createClassroom(@RequestBody String classroomName) {
-    Classroom classroom = classroomService.addClassroom(classroomName);
+  public ResponseEntity<ApiResponse> createClassroom(@RequestBody AddNewClassroomRequest request) {
+    Classroom classroom = classroomService.addClassroom(request);
     ClassroomDto classroomDto = classroomService.convertToDto(classroom);
     return ResponseEntity.ok(new ApiResponse("success", classroomDto));
   }
@@ -77,17 +86,8 @@ public class ClassroomController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/delete/name/{name}")
-  public ResponseEntity<ApiResponse> deleteClassroomById(@PathVariable String name) {
+  public ResponseEntity<ApiResponse> deleteClassroomByName(@PathVariable String name) {
     classroomService.deleteClassroomByName(name);
     return ResponseEntity.ok(new ApiResponse("success", null));
-  }
-
-  @PreAuthorize("hasRole('ADMIN')")
-  @PostMapping("/{classroomId}/add-student/{studentId}")
-  public ResponseEntity<ApiResponse> addStudentToClassroom(@PathVariable Long classroomId,
-      @PathVariable Long studentId) {
-    Classroom classroom = classroomService.addStudentToClassroom(classroomId, studentId);
-    ClassroomDto classroomDto = classroomService.convertToDto(classroom);
-    return ResponseEntity.ok(new ApiResponse("success", classroomDto));
   }
 }

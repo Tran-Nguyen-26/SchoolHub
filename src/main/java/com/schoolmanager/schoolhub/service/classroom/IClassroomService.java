@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.schoolmanager.schoolhub.dto.ClassroomDto;
 import com.schoolmanager.schoolhub.model.Classroom;
+import com.schoolmanager.schoolhub.request.AddNewClassroomRequest;
 
 public interface IClassroomService {
   List<Classroom> getAllClassrooms();
@@ -14,15 +15,13 @@ public interface IClassroomService {
 
   List<Classroom> getClassroomsByGradeName(String gradeName);
 
-  Classroom addClassroom(String classroomName);
+  Classroom addClassroom(AddNewClassroomRequest request);
 
   Classroom updateHomeroomTeacher(Long classroomId, Long teacherId);
 
   void deleteClassroomById(Long id);
 
   void deleteClassroomByName(String name);
-
-  Classroom addStudentToClassroom(Long classroomId, Long studentId);
 
   ClassroomDto convertToDto(Classroom classroom);
 

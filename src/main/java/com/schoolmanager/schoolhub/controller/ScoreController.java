@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.schoolmanager.schoolhub.dto.ScoreDto;
 import com.schoolmanager.schoolhub.model.Score;
 import com.schoolmanager.schoolhub.request.AssignScoreRequest;
+import com.schoolmanager.schoolhub.request.UpdateScoreRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.score.IScoreService;
 
@@ -64,6 +66,14 @@ public class ScoreController {
   public ResponseEntity<ApiResponse> assignScoreToStudent(@PathVariable Long studentId, @PathVariable Long examId,
       @RequestBody AssignScoreRequest request) {
     Score score = scoreService.assignScoreToStudent(studentId, examId, request);
+    ScoreDto scoreDto = scoreService.convertToDto(score);
+    return ResponseEntity.ok(new ApiResponse("success", scoreDto));
+  }
+
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+  @PutMapping("/update/{id}")
+  public ResponseEntity<ApiResponse> updateScore(@PathVariable Long scoreId, @RequestBody UpdateScoreRequest request) {
+    Score score = scoreService.updateScore(scoreId, request);
     ScoreDto scoreDto = scoreService.convertToDto(score);
     return ResponseEntity.ok(new ApiResponse("success", scoreDto));
   }

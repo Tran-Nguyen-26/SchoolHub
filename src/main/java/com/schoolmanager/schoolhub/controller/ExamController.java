@@ -1,9 +1,11 @@
 package com.schoolmanager.schoolhub.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +25,7 @@ public class ExamController {
 
   private final IExamService examService;
 
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getExamById(@PathVariable Long id) {
     Exam exam = examService.getExamById(id);
@@ -30,10 +33,20 @@ public class ExamController {
     return ResponseEntity.ok(new ApiResponse("success", examDto));
   }
 
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addExam(@RequestBody AddExamRequest request) {
     Exam exam = examService.addExam(request);
     ExamDto examDto = examService.convertToDto(exam);
     return ResponseEntity.ok(new ApiResponse("success", examDto));
   }
+
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+  @PutMapping("/update/{id}")
+  public ResponseEntity<ApiResponse> updateExam(@PathVariable Long id, @RequestBody AddExamRequest request) {
+    Exam exam = examService.updateExam(id, request);
+    ExamDto examDto = examService.convertToDto(exam);
+    return ResponseEntity.ok(new ApiResponse("success", examDto));
+  }
+
 }

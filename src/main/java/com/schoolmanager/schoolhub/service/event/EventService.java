@@ -43,9 +43,8 @@ public class EventService implements IEventService {
 
   @Override
   public Event addEvent(AddEventRequest request) {
-    Classroom classroom = classroomService.getClassroomByName(request.getClassroomName());
-    Semester semester = semesterService.getSemesterBySemesterNameAndSchoolYearName(request.getSemesterName(),
-        request.getSchoolYearName());
+    Classroom classroom = classroomService.getClassroomById(request.getClassroomId());
+    Semester semester = semesterService.getSemesterById(request.getSemesterId());
     List<Event> events = getEventsByClassroomIdAndSemesterId(classroom.getId(), semester.getId());
     boolean isExistEvent = events.stream().anyMatch(event -> event.getTitle().equals(request.getTitle()));
     if (isExistEvent)
@@ -53,8 +52,6 @@ public class EventService implements IEventService {
     Event event = modelMapper.map(request, Event.class);
     event.setClassroom(classroom);
     event.setSemester(semester);
-    classroom.getEvents().add(event);
-    semester.getEvents().add(event);
     return eventRepository.save(event);
   }
 

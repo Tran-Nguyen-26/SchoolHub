@@ -6,9 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.StudentDto;
+import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.model.Student;
 import com.schoolmanager.schoolhub.model.User;
+import com.schoolmanager.schoolhub.repository.ClassroomRepository;
 import com.schoolmanager.schoolhub.repository.StudentRepository;
+import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 public class StudentService implements IStudentService {
 
   private final StudentRepository studentRepository;
+  private final ClassroomRepository classroomRepository;
+  private final IClassroomService classroomService;
   private final ModelMapper modelMapper;
 
   @Override
@@ -40,8 +45,28 @@ public class StudentService implements IStudentService {
   }
 
   @Override
+  public List<Student> getStudentsByGradeId(Long gradeId) {
+    return studentRepository.findByGradeId(gradeId);
+  }
+
+  @Override
   public List<Student> getStudentsByGradeLevel(String level) {
     return studentRepository.findByGradeLevel(level);
+  }
+
+  @Override
+  public Student addStudentToClassroom(Long classroomId, Long studentId) {
+    Classroom classroom = classroomService.getClassroomById(classroomId);
+    Student student = getStudentById(studentId);
+    Classroom oldClassroom = student.getClassroom();
+    if (oldClassroom != null) {
+      oldClassroom.setTotalStudents(oldClassroom.getTotalStudents() - 1);
+      classroomRepository.save(oldClassroom);
+    }
+    student.setClassroom(classroom);
+    classroom.setTotalStudents(classroom.getTotalStudents() + 1);
+    classroomRepository.save(classroom);
+    return studentRepository.save(student);
   }
 
   @Override

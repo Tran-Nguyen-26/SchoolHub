@@ -11,6 +11,7 @@ import com.schoolmanager.schoolhub.model.Semester;
 import com.schoolmanager.schoolhub.repository.SchoolYearRepository;
 import com.schoolmanager.schoolhub.repository.SemesterRepository;
 import com.schoolmanager.schoolhub.request.AddSemesterRequest;
+import com.schoolmanager.schoolhub.request.UpdateSemesterRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,17 +42,20 @@ public class SemesterService implements ISemesterService {
   public List<Semester> addSemesters(AddSemesterRequest request) {
     Semester semester1 = new Semester(request.getSemesterName1(), request.getStartDate1(), request.getEndDate1());
     Semester semester2 = new Semester(request.getSemesterName2(), request.getStartDate2(), request.getEndDate2());
-    SchoolYear schoolYear = schoolYearRepository.findByYearName(request.getSchoolYearName());
-    if (schoolYear == null)
-      throw new RuntimeException("fail");
+    SchoolYear schoolYear = schoolYearRepository.findById(request.getSchoolYearId())
+        .orElseThrow(() -> new RuntimeException("fail"));
     semester1.setSchoolYear(schoolYear);
     semester2.setSchoolYear(schoolYear);
-    schoolYear.getSemesters().add(semester1);
-    schoolYear.getSemesters().add(semester2);
-    schoolYearRepository.save(schoolYear);
     semesterRepository.save(semester1);
     semesterRepository.save(semester2);
     return getSemestersBySchoolYearId(schoolYear.getId());
+  }
+
+  @Override
+  public Semester updateSemester(Long id, UpdateSemesterRequest request) {
+    Semester semester = getSemesterById(id);
+    semester = modelMapper.map(request, Semester.class);
+    return semesterRepository.save(semester);
   }
 
   @Override

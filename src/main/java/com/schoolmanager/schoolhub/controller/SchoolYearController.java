@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.schoolmanager.schoolhub.dto.SchoolYearDto;
 import com.schoolmanager.schoolhub.model.SchoolYear;
 import com.schoolmanager.schoolhub.request.AddNewSchoolYearRequest;
+import com.schoolmanager.schoolhub.request.UpdateSchoolYearRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.schoolyear.ISchoolYearService;
 
@@ -54,6 +56,14 @@ public class SchoolYearController {
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addNewSchoolYear(@RequestBody AddNewSchoolYearRequest request) {
     SchoolYear schoolYear = schoolYearService.addNewSchoolYear(request);
+    SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);
+    return ResponseEntity.ok(new ApiResponse("success", schoolYearDto));
+  }
+
+  @PutMapping("/update/{id}")
+  public ResponseEntity<ApiResponse> updateSchoolYear(@PathVariable Long id,
+      @RequestBody UpdateSchoolYearRequest request) {
+    SchoolYear schoolYear = schoolYearService.updateSchoolYear(id, request);
     SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);
     return ResponseEntity.ok(new ApiResponse("success", schoolYearDto));
   }

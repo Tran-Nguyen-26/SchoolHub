@@ -17,6 +17,8 @@ public interface IUserService {
 
   List<User> getAllStudentUsers();
 
+  List<User> getAllTeacherUsers();
+
   User addUser(AddUserRequest request);
 
   User updateUserById(Long id, UpdateUserRequest request);

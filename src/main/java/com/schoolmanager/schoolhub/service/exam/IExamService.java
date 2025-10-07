@@ -9,5 +9,7 @@ public interface IExamService {
 
   Exam addExam(AddExamRequest request);
 
+  Exam updateExam(Long id, AddExamRequest request);
+
   ExamDto convertToDto(Exam exam);
 }

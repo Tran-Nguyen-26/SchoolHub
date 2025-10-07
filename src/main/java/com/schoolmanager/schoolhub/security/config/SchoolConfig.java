@@ -1,6 +1,7 @@
 package com.schoolmanager.schoolhub.security.config;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,11 +35,11 @@ public class SchoolConfig {
   private final JwtAuthEntryPoint authEntryPoint;
   private final JwtUtils jwtUtils;
 
-  // private static final List<String> SECURED_URLS = List.of("/api/v1/users/**");
-
   @Bean
   public ModelMapper modelMapper() {
-    return new ModelMapper();
+    ModelMapper modelMapper = new ModelMapper();
+    modelMapper.getConfiguration().setSkipNullEnabled(true);
+    return modelMapper;
   }
 
   @Bean

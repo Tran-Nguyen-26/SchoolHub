@@ -11,6 +11,7 @@ import com.schoolmanager.schoolhub.model.Score;
 import com.schoolmanager.schoolhub.model.Student;
 import com.schoolmanager.schoolhub.repository.ScoreRepository;
 import com.schoolmanager.schoolhub.request.AssignScoreRequest;
+import com.schoolmanager.schoolhub.request.UpdateScoreRequest;
 import com.schoolmanager.schoolhub.service.exam.IExamService;
 import com.schoolmanager.schoolhub.service.student.IStudentService;
 
@@ -56,6 +57,13 @@ public class ScoreService implements IScoreService {
     score.setExam(exam);
     student.getScores().add(score);
     exam.getScores().add(score);
+    return scoreRepository.save(score);
+  }
+
+  @Override
+  public Score updateScore(Long scoreId, UpdateScoreRequest request) {
+    Score score = getScoreById(scoreId);
+    score = modelMapper.map(request, Score.class);
     return scoreRepository.save(score);
   }
 
