@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import com.schoolmanager.schoolhub.enums.Gender;
+import com.schoolmanager.schoolhub.exceptions.ImportExcelException;
 import com.schoolmanager.schoolhub.request.importExcel.ImportUserTeacherRequest;
 
 @Component
@@ -50,7 +51,7 @@ public class TeacherExcelHelper {
       }
       return userTeachers;
     } catch (IOException e) {
-      throw new RuntimeException("import fail " + e.getMessage());
+      throw new ImportExcelException("convert teacher data excel to request data fail " + e.getMessage());
     }
   }
 }

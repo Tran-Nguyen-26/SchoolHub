@@ -19,6 +19,7 @@ import com.schoolmanager.schoolhub.request.UpdateSubjectRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.subject.ISubjectService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -62,7 +63,7 @@ public class SubjectController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addSubject(@RequestBody AddSubjectRequest request) {
+  public ResponseEntity<ApiResponse> addSubject(@Valid @RequestBody AddSubjectRequest request) {
     Subject subject = subjectService.addSubject(request);
     SubjectDto subjectDto = subjectService.convertToDto(subject);
     return ResponseEntity.ok(new ApiResponse("success", subjectDto));

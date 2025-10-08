@@ -6,13 +6,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.EventDto;
+import com.schoolmanager.schoolhub.exceptions.AlreadyExsitsException;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.model.Event;
 import com.schoolmanager.schoolhub.model.Semester;
 import com.schoolmanager.schoolhub.repository.EventRepository;
 import com.schoolmanager.schoolhub.request.AddEventRequest;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
-import com.schoolmanager.schoolhub.service.schoolyear.ISchoolYearService;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,8 @@ public class EventService implements IEventService {
 
   @Override
   public Event getEventById(Long id) {
-    return eventRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return eventRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found even with id " + id));
   }
 
   @Override
@@ -48,7 +50,7 @@ public class EventService implements IEventService {
     List<Event> events = getEventsByClassroomIdAndSemesterId(classroom.getId(), semester.getId());
     boolean isExistEvent = events.stream().anyMatch(event -> event.getTitle().equals(request.getTitle()));
     if (isExistEvent)
-      throw new RuntimeException("add event fail");
+      throw new AlreadyExsitsException("Alreay exists event " + request.getTitle());
     Event event = modelMapper.map(request, Event.class);
     event.setClassroom(classroom);
     event.setSemester(semester);

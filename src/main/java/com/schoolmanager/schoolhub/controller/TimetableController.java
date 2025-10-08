@@ -20,6 +20,7 @@ import com.schoolmanager.schoolhub.request.UpdateTimetableRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.timetable.ITimetableService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class TimetableController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addTimetable(@RequestBody AddTimetableRequest request) {
+  public ResponseEntity<ApiResponse> addTimetable(@Valid @RequestBody AddTimetableRequest request) {
     Timetable timetable = timetableService.addTimetable(request);
     TimetableDto timetableDto = timetableService.convertToDto(timetable);
     return ResponseEntity.ok(new ApiResponse("success", timetableDto));

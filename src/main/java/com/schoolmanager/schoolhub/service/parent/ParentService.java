@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.ParentDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Parent;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.repository.ParentRepository;
@@ -31,7 +32,8 @@ public class ParentService implements IParentService {
 
   @Override
   public Parent getParentById(Long id) {
-    return parentRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return parentRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found parent with id " + id));
   }
 
   @Override

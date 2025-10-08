@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.schoolmanager.schoolhub.dto.RoleDto;
 import com.schoolmanager.schoolhub.enums.PermissionName;
 import com.schoolmanager.schoolhub.enums.RoleName;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Permission;
 import com.schoolmanager.schoolhub.model.Role;
 import com.schoolmanager.schoolhub.repository.PermissionRepository;
@@ -31,7 +32,8 @@ public class RoleService implements IRoleService {
 
   @Override
   public Role getRoleById(Long id) {
-    return roleRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return roleRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found role with id: " + id));
   }
 
   @Override

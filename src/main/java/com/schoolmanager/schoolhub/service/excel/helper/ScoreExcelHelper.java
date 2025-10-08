@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
+import com.schoolmanager.schoolhub.exceptions.ImportExcelException;
 import com.schoolmanager.schoolhub.request.importExcel.ImportScoreRequest;
 
 @Component
@@ -29,7 +30,7 @@ public class ScoreExcelHelper {
       }
       return scoreRequests;
     } catch (IOException e) {
-      throw new RuntimeException("import file fail " + e.getMessage());
+      throw new ImportExcelException("convert score data excel to request data fail " + e.getMessage());
     }
   }
 }

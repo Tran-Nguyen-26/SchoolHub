@@ -19,6 +19,7 @@ import com.schoolmanager.schoolhub.request.UpdateSchoolYearRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.schoolyear.ISchoolYearService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -54,14 +55,14 @@ public class SchoolYearController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addNewSchoolYear(@RequestBody AddNewSchoolYearRequest request) {
+  public ResponseEntity<ApiResponse> addNewSchoolYear(@Valid @RequestBody AddNewSchoolYearRequest request) {
     SchoolYear schoolYear = schoolYearService.addNewSchoolYear(request);
     SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);
     return ResponseEntity.ok(new ApiResponse("success", schoolYearDto));
   }
 
   @PutMapping("/update/{id}")
-  public ResponseEntity<ApiResponse> updateSchoolYear(@PathVariable Long id,
+  public ResponseEntity<ApiResponse> updateSchoolYear(@Valid @PathVariable Long id,
       @RequestBody UpdateSchoolYearRequest request) {
     SchoolYear schoolYear = schoolYearService.updateSchoolYear(id, request);
     SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);

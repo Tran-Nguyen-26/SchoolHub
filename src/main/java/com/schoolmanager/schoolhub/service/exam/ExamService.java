@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.ExamDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.model.Exam;
 import com.schoolmanager.schoolhub.model.Semester;
@@ -28,7 +29,7 @@ public class ExamService implements IExamService {
 
   @Override
   public Exam getExamById(Long id) {
-    return examRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return examRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found exam with id " + id));
   }
 
   @Override

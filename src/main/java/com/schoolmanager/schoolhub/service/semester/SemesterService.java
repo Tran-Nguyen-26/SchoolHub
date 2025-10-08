@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.SemesterDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.SchoolYear;
 import com.schoolmanager.schoolhub.model.Semester;
 import com.schoolmanager.schoolhub.repository.SchoolYearRepository;
@@ -25,7 +26,8 @@ public class SemesterService implements ISemesterService {
 
   @Override
   public Semester getSemesterById(Long id) {
-    return semesterRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return semesterRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("not found semester with id " + id));
   }
 
   @Override
@@ -43,7 +45,7 @@ public class SemesterService implements ISemesterService {
     Semester semester1 = new Semester(request.getSemesterName1(), request.getStartDate1(), request.getEndDate1());
     Semester semester2 = new Semester(request.getSemesterName2(), request.getStartDate2(), request.getEndDate2());
     SchoolYear schoolYear = schoolYearRepository.findById(request.getSchoolYearId())
-        .orElseThrow(() -> new RuntimeException("fail"));
+        .orElseThrow(() -> new ResourceNotFoundException("Not found schoolyear with id: " + request.getSchoolYearId()));
     semester1.setSchoolYear(schoolYear);
     semester2.setSchoolYear(schoolYear);
     semesterRepository.save(semester1);

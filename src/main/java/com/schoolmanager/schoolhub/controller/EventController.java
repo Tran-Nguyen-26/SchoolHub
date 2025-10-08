@@ -16,6 +16,7 @@ import com.schoolmanager.schoolhub.request.AddEventRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.event.IEventService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -48,7 +49,7 @@ public class EventController {
   }
 
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addEvent(@RequestBody AddEventRequest request) {
+  public ResponseEntity<ApiResponse> addEvent(@Valid @RequestBody AddEventRequest request) {
     Event event = eventService.addEvent(request);
     EventDto eventDto = eventService.convertToDto(event);
     return ResponseEntity.ok(new ApiResponse("success", eventDto));

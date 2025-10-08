@@ -20,6 +20,7 @@ import com.schoolmanager.schoolhub.request.UpdateUserRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.user.IUserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -63,7 +64,7 @@ public class UserController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addUser(@RequestBody AddUserRequest request) {
+  public ResponseEntity<ApiResponse> addUser(@Valid @RequestBody AddUserRequest request) {
     User user = userService.addUser(request);
     UserDto userDto = userService.convertToDto(user);
     return ResponseEntity.ok(new ApiResponse("success", userDto));

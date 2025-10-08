@@ -16,6 +16,7 @@ import com.schoolmanager.schoolhub.request.AddExamRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.exam.IExamService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class ExamController {
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addExam(@RequestBody AddExamRequest request) {
+  public ResponseEntity<ApiResponse> addExam(@Valid @RequestBody AddExamRequest request) {
     Exam exam = examService.addExam(request);
     ExamDto examDto = examService.convertToDto(exam);
     return ResponseEntity.ok(new ApiResponse("success", examDto));

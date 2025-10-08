@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.SubjectDto;
+import com.schoolmanager.schoolhub.exceptions.AlreadyExsitsException;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Grade;
 import com.schoolmanager.schoolhub.model.Subject;
 import com.schoolmanager.schoolhub.repository.SubjectRepository;
@@ -25,7 +27,8 @@ public class SubjectService implements ISubjectService {
 
   @Override
   public Subject getSubjectById(Long id) {
-    return subjectRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return subjectRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found subject with id " + id));
   }
 
   @Override
@@ -57,7 +60,7 @@ public class SubjectService implements ISubjectService {
   public Subject addSubject(AddSubjectRequest request) {
     Grade grade = gradeService.getGradeById(request.getGradeId());
     if (subjectRepository.existsByNameAndGradeId(request.getName(), grade.getId())) {
-      throw new RuntimeException("mon hoc da ton tai");
+      throw new AlreadyExsitsException("Already exists subject " + request.getName() + " " + grade.getLevel());
     }
     Subject subject = modelMapper.map(request, Subject.class);
     subject.setGrade(grade);

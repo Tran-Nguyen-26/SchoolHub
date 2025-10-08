@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.ClassroomDto;
+import com.schoolmanager.schoolhub.exceptions.AlreadyExsitsException;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.model.Grade;
 import com.schoolmanager.schoolhub.model.Teacher;
@@ -32,7 +34,8 @@ public class ClassroomService implements IClassroomService {
 
   @Override
   public Classroom getClassroomById(Long id) {
-    return classroomRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return classroomRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found classroom with id " + id));
   }
 
   @Override
@@ -47,10 +50,9 @@ public class ClassroomService implements IClassroomService {
 
   @Override
   public Classroom addClassroom(AddNewClassroomRequest request) {
-    Classroom classroom = this.getClassroomByName(request.getClassroomName());
-    if (classroom != null)
-      throw new RuntimeException("add fail");
-    classroom = new Classroom();
+    if (classroomRepository.existsByName(request.getClassroomName()))
+      throw new AlreadyExsitsException("Already exists classroom with name " + request.getClassroomName());
+    Classroom classroom = new Classroom();
     classroom.setName(request.getClassroomName());
     classroom.setTotalStudents(0);
     String gradeLevel = request.getClassroomName().substring(0, 2);
@@ -75,7 +77,7 @@ public class ClassroomService implements IClassroomService {
   @Override
   public void deleteClassroomById(Long id) {
     classroomRepository.findById(id).ifPresentOrElse(classroomRepository::delete, () -> {
-      throw new RuntimeException("fail");
+      throw new ResourceNotFoundException("Not found classroom with id " + id);
     });
   }
 

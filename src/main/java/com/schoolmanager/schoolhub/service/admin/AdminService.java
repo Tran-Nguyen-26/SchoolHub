@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.AdminDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Admin;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.repository.AdminRepository;
@@ -26,7 +27,8 @@ public class AdminService implements IAdminService {
 
   @Override
   public Admin getAdminById(Long id) {
-    return adminRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return adminRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found admin with id " + id));
   }
 
   @Override

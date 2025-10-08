@@ -19,6 +19,7 @@ import com.schoolmanager.schoolhub.request.UpdateScoreRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.score.IScoreService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -63,7 +64,8 @@ public class ScoreController {
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @PostMapping("/assign/student/{studentId}/exam/{examId}")
-  public ResponseEntity<ApiResponse> assignScoreToStudent(@PathVariable Long studentId, @PathVariable Long examId,
+  public ResponseEntity<ApiResponse> assignScoreToStudent(@Valid @PathVariable Long studentId,
+      @PathVariable Long examId,
       @RequestBody AssignScoreRequest request) {
     Score score = scoreService.assignScoreToStudent(studentId, examId, request);
     ScoreDto scoreDto = scoreService.convertToDto(score);
@@ -72,7 +74,8 @@ public class ScoreController {
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @PutMapping("/update/{id}")
-  public ResponseEntity<ApiResponse> updateScore(@PathVariable Long scoreId, @RequestBody UpdateScoreRequest request) {
+  public ResponseEntity<ApiResponse> updateScore(@PathVariable Long scoreId,
+      @RequestBody UpdateScoreRequest request) {
     Score score = scoreService.updateScore(scoreId, request);
     ScoreDto scoreDto = scoreService.convertToDto(score);
     return ResponseEntity.ok(new ApiResponse("success", scoreDto));

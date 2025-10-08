@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.ScoreDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Exam;
 import com.schoolmanager.schoolhub.model.Score;
 import com.schoolmanager.schoolhub.model.Student;
@@ -28,7 +29,8 @@ public class ScoreService implements IScoreService {
 
   @Override
   public Score getScoreById(Long id) {
-    return scoreRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return scoreRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found score with id: " + id));
   }
 
   @Override

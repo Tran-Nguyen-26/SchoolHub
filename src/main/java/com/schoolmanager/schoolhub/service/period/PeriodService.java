@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.PeriodDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Period;
 import com.schoolmanager.schoolhub.repository.PeriodRepository;
 import com.schoolmanager.schoolhub.request.AddPeriodRequest;
@@ -26,7 +27,8 @@ public class PeriodService implements IPeriodService {
 
   @Override
   public Period getPeriodById(Long id) {
-    return periodRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return periodRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found period with id " + id));
   }
 
   @Override

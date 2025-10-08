@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.TeacherDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Subject;
 import com.schoolmanager.schoolhub.model.Teacher;
 import com.schoolmanager.schoolhub.model.User;
@@ -30,7 +31,8 @@ public class TeacherService implements ITeacherService {
 
   @Override
   public Teacher getTeacherById(Long id) {
-    return teacherRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return teacherRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found teacher with id " + id));
   }
 
   @Override

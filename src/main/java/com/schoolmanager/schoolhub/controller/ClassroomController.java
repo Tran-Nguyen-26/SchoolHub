@@ -19,6 +19,7 @@ import com.schoolmanager.schoolhub.request.AddNewClassroomRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -62,7 +63,7 @@ public class ClassroomController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> createClassroom(@RequestBody AddNewClassroomRequest request) {
+  public ResponseEntity<ApiResponse> createClassroom(@Valid @RequestBody AddNewClassroomRequest request) {
     Classroom classroom = classroomService.addClassroom(request);
     ClassroomDto classroomDto = classroomService.convertToDto(classroom);
     return ResponseEntity.ok(new ApiResponse("success", classroomDto));

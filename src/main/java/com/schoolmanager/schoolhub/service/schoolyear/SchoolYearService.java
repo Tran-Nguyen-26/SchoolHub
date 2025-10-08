@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.SchoolYearDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.SchoolYear;
 import com.schoolmanager.schoolhub.model.Semester;
 import com.schoolmanager.schoolhub.repository.SchoolYearRepository;
@@ -13,6 +14,7 @@ import com.schoolmanager.schoolhub.request.AddNewSchoolYearRequest;
 import com.schoolmanager.schoolhub.request.UpdateSchoolYearRequest;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
 
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,7 +27,8 @@ public class SchoolYearService implements ISchoolYearService {
 
   @Override
   public SchoolYear getSchoolYearById(Long id) {
-    return schoolYearRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return schoolYearRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found schoolyear with id: " + id));
   }
 
   @Override

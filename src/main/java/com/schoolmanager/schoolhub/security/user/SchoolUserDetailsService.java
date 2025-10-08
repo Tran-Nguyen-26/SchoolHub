@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.security.user;
 
 import java.util.Optional;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,7 @@ public class SchoolUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     User user = Optional.ofNullable(userRepository.findByEmail(email))
-        .orElseThrow(() -> new RuntimeException("user not"));
+        .orElseThrow(() -> new BadCredentialsException("Incorrect email or password"));
     return SchoolUserDetails.buildUserDetails(user);
   }
 

@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.TimetableDto;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.model.Period;
 import com.schoolmanager.schoolhub.model.Semester;
@@ -37,7 +38,8 @@ public class TimetableService implements ITimetableService {
 
   @Override
   public Timetable getTimetableById(Long id) {
-    return timetableRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return timetableRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found timetable with id " + id));
   }
 
   @Override

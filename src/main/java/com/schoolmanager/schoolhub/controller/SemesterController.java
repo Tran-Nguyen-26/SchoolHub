@@ -20,6 +20,7 @@ import com.schoolmanager.schoolhub.request.UpdateSemesterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -55,7 +56,7 @@ public class SemesterController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addSemesters(@RequestBody AddSemesterRequest request) {
+  public ResponseEntity<ApiResponse> addSemesters(@Valid @RequestBody AddSemesterRequest request) {
     List<Semester> semesters = semesterService.addSemesters(request);
     List<SemesterDto> semesterDtos = semesterService.convertListToDto(semesters);
     return ResponseEntity.ok(new ApiResponse("success", semesterDtos));
@@ -63,7 +64,8 @@ public class SemesterController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/update/{id}")
-  public ResponseEntity<ApiResponse> updateSemester(@PathVariable Long id, @RequestBody UpdateSemesterRequest request) {
+  public ResponseEntity<ApiResponse> updateSemester(@PathVariable Long id,
+      @RequestBody UpdateSemesterRequest request) {
     Semester semester = semesterService.updateSemester(id, request);
     SemesterDto semesterDto = semesterService.convertToDto(semester);
     return ResponseEntity.ok(new ApiResponse("success", semesterDto));

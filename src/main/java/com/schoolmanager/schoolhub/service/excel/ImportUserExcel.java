@@ -2,7 +2,6 @@ package com.schoolmanager.schoolhub.service.excel;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.schoolmanager.schoolhub.enums.RoleName;
+import com.schoolmanager.schoolhub.exceptions.ImportExcelException;
 import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.model.Exam;
 import com.schoolmanager.schoolhub.model.Role;
@@ -82,7 +82,7 @@ public class ImportUserExcel implements IImportUserExcel {
         this.addUserStudent(request);
       }
     } catch (IOException e) {
-      throw new RuntimeException("import fail: " + e.getMessage());
+      throw new ImportExcelException("Import file excel student fail: " + file);
     }
   }
 
@@ -107,7 +107,7 @@ public class ImportUserExcel implements IImportUserExcel {
       for (ImportUserTeacherRequest request : userTeacherRequests)
         this.addUserTeacher(request);
     } catch (IOException e) {
-      throw new RuntimeException("import fail: " + e.getMessage());
+      throw new ImportExcelException("Import file excel teacher fail: " + file);
     }
   }
 
@@ -134,7 +134,7 @@ public class ImportUserExcel implements IImportUserExcel {
       }
       return scores;
     } catch (IOException e) {
-      throw new RuntimeException("import fail: " + e.getMessage());
+      throw new ImportExcelException("Import file excel score fail: " + file);
     }
   }
 }

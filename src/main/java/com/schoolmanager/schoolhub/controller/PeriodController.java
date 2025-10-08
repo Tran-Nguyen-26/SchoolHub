@@ -18,6 +18,7 @@ import com.schoolmanager.schoolhub.request.AddPeriodRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.period.IPeriodService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class PeriodController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addPeriod(@RequestBody AddPeriodRequest request) {
+  public ResponseEntity<ApiResponse> addPeriod(@Valid @RequestBody AddPeriodRequest request) {
     Period period = periodService.addPeriod(request);
     PeriodDto periodDto = periodService.convertToDto(period);
     return ResponseEntity.ok(new ApiResponse("success", periodDto));

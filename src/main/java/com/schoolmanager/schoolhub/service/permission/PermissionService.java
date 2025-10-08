@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.PermissionDto;
 import com.schoolmanager.schoolhub.enums.RoleName;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Permission;
 import com.schoolmanager.schoolhub.repository.PermissionRepository;
 
@@ -26,7 +27,8 @@ public class PermissionService implements IPermissionService {
 
   @Override
   public Permission getPermissionById(Long id) {
-    return permissionRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return permissionRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found permission with id: " + id));
   }
 
   @Override

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.UserDto;
 import com.schoolmanager.schoolhub.enums.RoleName;
+import com.schoolmanager.schoolhub.exceptions.AlreadyExsitsException;
+import com.schoolmanager.schoolhub.exceptions.InvalidPasswordException;
+import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Admin;
 import com.schoolmanager.schoolhub.model.Parent;
 import com.schoolmanager.schoolhub.model.Role;
@@ -49,7 +52,7 @@ public class UserService implements IUserService {
 
   @Override
   public User getUserById(Long id) {
-    return userRepository.findById(id).orElseThrow(() -> new RuntimeException("fail"));
+    return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found user with id " + id));
   }
 
   @Override
@@ -70,7 +73,7 @@ public class UserService implements IUserService {
   @Override
   public User addUser(AddUserRequest request) {
     if (userExists(request.getEmail()))
-      throw new RuntimeException("user already exists");
+      throw new AlreadyExsitsException("Already exists email " + request.getEmail());
     User user = modelMapper.map(request, User.class);
     Role role = roleRepository.findByName(request.getRole());
     user.setRole(role);
@@ -103,18 +106,7 @@ public class UserService implements IUserService {
   @Override
   public User updateUserById(Long id, UpdateUserRequest request) {
     User user = getUserById(id);
-    if (request.getUsername() != null)
-      user.setUsername(request.getUsername());
-    if (request.getEmail() != null)
-      user.setEmail(request.getEmail());
-    if (request.getPhone() != null)
-      user.setPhone(request.getPhone());
-    if (request.getAddress() != null)
-      user.setAddress(request.getAddress());
-    if (request.getDob() != null)
-      user.setDob(request.getDob());
-    if (request.getGender() != null)
-      user.setGender(request.getGender());
+    user = modelMapper.map(request, User.class);
     return userRepository.save(user);
   }
 
@@ -137,10 +129,10 @@ public class UserService implements IUserService {
     String email = userDetails.getEmail();
     User user = getUserByEmail(email);
     if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-      throw new RuntimeException("Sai mat khau cu");
+      throw new InvalidPasswordException("Incorrect old password");
     }
     if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
-      throw new RuntimeException("Xac nhan lai mat khau moi");
+      throw new InvalidPasswordException("New password confirmation does not match");
     }
     user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     userRepository.save(user);
