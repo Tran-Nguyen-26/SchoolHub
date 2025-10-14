@@ -14,7 +14,6 @@ import com.schoolmanager.schoolhub.request.AddNewSchoolYearRequest;
 import com.schoolmanager.schoolhub.request.UpdateSchoolYearRequest;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
 
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 
 @Service

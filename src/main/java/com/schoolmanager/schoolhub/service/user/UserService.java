@@ -3,6 +3,8 @@ package com.schoolmanager.schoolhub.service.user;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,8 +48,8 @@ public class UserService implements IUserService {
   private final PasswordEncoder passwordEncoder;
 
   @Override
-  public List<User> getAllUsers() {
-    return userRepository.findAll();
+  public Page<User> getAllUsers(Pageable pageable) {
+    return userRepository.findAll(pageable);
   }
 
   @Override
@@ -61,13 +63,13 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public List<User> getAllStudentUsers() {
-    return userRepository.findAllStudentUsers();
+  public Page<User> getAllStudentUsers(Pageable pageable) {
+    return userRepository.findAllStudentUsers(pageable);  
   }
 
   @Override
-  public List<User> getAllTeacherUsers() {
-    return userRepository.findALlTeacherUsers();
+  public Page<User> getAllTeacherUsers(Pageable pageable) {
+    return userRepository.findAllTeacherUsers(pageable);
   }
 
   @Override
@@ -118,8 +120,8 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public List<UserDto> convertListToDto(List<User> users) {
-    return users.stream().map(this::convertToDto).toList();
+  public Page<UserDto> convertPageToDto(Page<User> users) {
+    return users.map(this::convertToDto);
   }
 
   @Override

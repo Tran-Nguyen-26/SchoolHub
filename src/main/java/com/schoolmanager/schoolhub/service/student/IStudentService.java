@@ -2,11 +2,14 @@ package com.schoolmanager.schoolhub.service.student;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.schoolmanager.schoolhub.dto.StudentDto;
 import com.schoolmanager.schoolhub.model.Student;
 
 public interface IStudentService {
-  List<Student> getAllStudents();
+  Page<Student> getAllStudents(Pageable pageable);
 
   Student getStudentById(Long id);
 
@@ -14,13 +17,15 @@ public interface IStudentService {
 
   List<Student> getStudentsByClassroomName(String classroomName);
 
-  List<Student> getStudentsByGradeId(Long gradeId);
+  Page<Student> getStudentsByGradeId(Long gradeId, Pageable pageable);
 
-  List<Student> getStudentsByGradeLevel(String level);
+  Page<Student> getStudentsByGradeLevel(String level, Pageable pageable);
 
   Student addStudentToClassroom(Long classroomId, Long studentId);
 
   StudentDto convertToDto(Student student);
 
   List<StudentDto> convertListToDto(List<Student> students);
+
+  Page<StudentDto> convertPageToDto(Page<Student> students);
 }

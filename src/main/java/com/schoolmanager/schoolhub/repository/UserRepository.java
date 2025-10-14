@@ -1,7 +1,7 @@
 package com.schoolmanager.schoolhub.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,11 +12,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
   User findByEmail(String email);
 
   @Query("SELECT s.user FROM Student s")
-  List<User> findAllStudentUsers();
+  Page<User> findAllStudentUsers(Pageable pageable);
 
   boolean existsByEmail(String email);
 
   @Query("Select t.user from Teacher t")
-  List<User> findALlTeacherUsers();
+  Page<User> findAllTeacherUsers(Pageable pageable);
 
 }

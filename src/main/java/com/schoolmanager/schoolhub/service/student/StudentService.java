@@ -3,6 +3,9 @@ package com.schoolmanager.schoolhub.service.student;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.StudentDto;
@@ -26,8 +29,8 @@ public class StudentService implements IStudentService {
   private final ModelMapper modelMapper;
 
   @Override
-  public List<Student> getAllStudents() {
-    return studentRepository.findAll();
+  public Page<Student> getAllStudents(Pageable pageable) {
+    return studentRepository.findAll(pageable);
   }
 
   @Override
@@ -47,13 +50,13 @@ public class StudentService implements IStudentService {
   }
 
   @Override
-  public List<Student> getStudentsByGradeId(Long gradeId) {
-    return studentRepository.findByGradeId(gradeId);
+  public Page<Student> getStudentsByGradeId(Long gradeId, Pageable pageable) {
+    return studentRepository.findByGradeId(gradeId, pageable);
   }
 
   @Override
-  public List<Student> getStudentsByGradeLevel(String level) {
-    return studentRepository.findByGradeLevel(level);
+  public Page<Student> getStudentsByGradeLevel(String level, Pageable pageable) {
+    return studentRepository.findByGradeLevel(level, pageable);
   }
 
   @Override
@@ -84,5 +87,10 @@ public class StudentService implements IStudentService {
   @Override
   public List<StudentDto> convertListToDto(List<Student> students) {
     return students.stream().map(s -> convertToDto(s)).toList();
+  }
+
+  @Override
+  public Page<StudentDto> convertPageToDto(Page<Student> students) {
+    return students.map(this::convertToDto);
   }
 }
