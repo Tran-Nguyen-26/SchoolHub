@@ -57,14 +57,6 @@ public class UserController {
   }
 
   @PreAuthorize("hasRole('ADMIN')")
-  @GetMapping("/students")
-  public ResponseEntity<ApiResponse> getAllStudentUsers(@PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<User> users = userService.getAllStudentUsers(pageable);
-    Page<UserDto> userDtos = userService.convertPageToDto(users);
-    return ResponseEntity.ok(new ApiResponse("success", userDtos));
-  }
-
-  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addUser(@Valid @RequestBody AddUserRequest request) {
     User user = userService.addUser(request);
