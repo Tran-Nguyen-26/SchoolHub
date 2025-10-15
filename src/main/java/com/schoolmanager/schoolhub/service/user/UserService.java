@@ -1,10 +1,9 @@
 package com.schoolmanager.schoolhub.service.user;
 
-import java.util.List;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,9 +26,11 @@ import com.schoolmanager.schoolhub.repository.RoleRepository;
 import com.schoolmanager.schoolhub.repository.StudentRepository;
 import com.schoolmanager.schoolhub.repository.TeacherRepository;
 import com.schoolmanager.schoolhub.repository.UserRepository;
+import com.schoolmanager.schoolhub.repository.specification.UserSpecification;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
 import com.schoolmanager.schoolhub.request.ChangePasswordRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
+import com.schoolmanager.schoolhub.request.requestFilter.UserFilterRequest;
 import com.schoolmanager.schoolhub.security.user.SchoolUserDetails;
 
 import lombok.RequiredArgsConstructor;
@@ -48,8 +49,19 @@ public class UserService implements IUserService {
   private final PasswordEncoder passwordEncoder;
 
   @Override
-  public Page<User> getAllUsers(Pageable pageable) {
-    return userRepository.findAll(pageable);
+  public Page<User> getAllUsers(UserFilterRequest request, Pageable pageable) {
+    if (request == null)
+      return userRepository.findAll(pageable);
+    Specification<User> spec = (root, query, cb) -> cb.conjunction();
+    if (request.getId() != null)
+      spec = spec.and(UserSpecification.hasId(request.getId()));
+    if (request.getUsername() != null)
+      spec = spec.and(UserSpecification.containsName(request.getUsername()));
+    if (request.getEmail() != null)
+      spec = spec.and(UserSpecification.containsEmail(request.getEmail()));
+    if (request.getRoleName() != null)
+      spec = spec.and(UserSpecification.hasRoleName(request.getRoleName().toString()));
+    return userRepository.findAll(spec, pageable);
   }
 
   @Override

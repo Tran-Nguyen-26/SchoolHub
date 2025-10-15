@@ -1,7 +1,5 @@
 package com.schoolmanager.schoolhub.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,6 +18,7 @@ import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
 import com.schoolmanager.schoolhub.request.ChangePasswordRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
+import com.schoolmanager.schoolhub.request.requestFilter.UserFilterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.user.IUserService;
 
@@ -35,8 +34,8 @@ public class UserController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
-  public ResponseEntity<ApiResponse> getAllUsers(@PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<User> users = userService.getAllUsers(pageable);
+  public ResponseEntity<ApiResponse> getAllUsers(@RequestBody UserFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+    Page<User> users = userService.getAllUsers(request, pageable);
     Page<UserDto> userDtos = userService.convertPageToDto(users);
     return ResponseEntity.ok(new ApiResponse("success", userDtos));
   }

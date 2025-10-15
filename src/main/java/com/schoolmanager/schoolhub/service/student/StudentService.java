@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.StudentDto;
@@ -15,6 +15,8 @@ import com.schoolmanager.schoolhub.model.Student;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.repository.ClassroomRepository;
 import com.schoolmanager.schoolhub.repository.StudentRepository;
+import com.schoolmanager.schoolhub.repository.specification.StudentSpecification;
+import com.schoolmanager.schoolhub.request.requestFilter.StudentFilterRequest;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,25 @@ public class StudentService implements IStudentService {
   private final ModelMapper modelMapper;
 
   @Override
-  public Page<Student> getAllStudents(Pageable pageable) {
-    return studentRepository.findAll(pageable);
+  public Page<Student> getAllStudents(StudentFilterRequest request, Pageable pageable) {
+    if (request == null)
+      return studentRepository.findAll(pageable);
+    Specification<Student> spec = (root, query, cb) -> cb.conjunction();
+    if (request.getId() != null)
+      spec = spec.and(StudentSpecification.hasId(request.getId()));
+    if (request.getUsername() != null)
+      spec = spec.and(StudentSpecification.containsName(request.getUsername()));
+    if (request.getEmail() != null)
+      spec = spec.and(StudentSpecification.containsEmail(request.getEmail()));
+    if (request.getAddress() != null)
+      spec = spec.and(StudentSpecification.containsAddress(request.getAddress()));
+    if (request.getGender() != null)
+      spec = spec.and(StudentSpecification.hasGender(request.getGender().toString()));
+    if (request.getClassroomId() != null)
+      spec = spec.and(StudentSpecification.hasClasroom(request.getClassroomId()));
+    if (request.getGradeId() != null)
+      spec = spec.and(StudentSpecification.hasGrade(request.getGradeId()));
+    return studentRepository.findAll(spec, pageable);
   }
 
   @Override

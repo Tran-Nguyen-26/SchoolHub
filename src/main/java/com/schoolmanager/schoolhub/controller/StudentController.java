@@ -10,11 +10,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.StudentDto;
 import com.schoolmanager.schoolhub.model.Student;
+import com.schoolmanager.schoolhub.request.requestFilter.StudentFilterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.student.IStudentService;
 
@@ -29,8 +31,8 @@ public class StudentController {
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/all")
-  public ResponseEntity<ApiResponse> getAllStudents(@PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<Student> students = studentService.getAllStudents(pageable);
+  public ResponseEntity<ApiResponse> getAllStudents(@RequestBody StudentFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+    Page<Student> students = studentService.getAllStudents(request, pageable);
     Page<StudentDto> studentDtos = studentService.convertPageToDto(students);
     return ResponseEntity.ok(new ApiResponse("success", studentDtos));
   }

@@ -1,6 +1,5 @@
 package com.schoolmanager.schoolhub.service.user;
 
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +9,10 @@ import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
 import com.schoolmanager.schoolhub.request.ChangePasswordRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
+import com.schoolmanager.schoolhub.request.requestFilter.UserFilterRequest;
 
 public interface IUserService {
-  Page<User> getAllUsers(Pageable pageable);
+  Page<User> getAllUsers(UserFilterRequest request, Pageable pageable);
 
   User getUserById(Long id);
 

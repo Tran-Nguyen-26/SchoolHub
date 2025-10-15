@@ -2,6 +2,9 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.schoolmanager.schoolhub.dto.TeacherDto;
 import com.schoolmanager.schoolhub.model.Teacher;
 import com.schoolmanager.schoolhub.request.AssignSubjectsToTeacherRequest;
+import com.schoolmanager.schoolhub.request.requestFilter.TeacherFilterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.teacher.ITeacherService;
 
@@ -26,11 +30,11 @@ public class TeacherController {
 
   private final ITeacherService teacherService;
 
-  @PreAuthorize("hasRole('ADMIN') or (hasRole('TEACHER') and #id == authentication.principal.id)")
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
-  public ResponseEntity<ApiResponse> getAllTeachers() {
-    List<Teacher> teachers = teacherService.getAllTeachers();
-    List<TeacherDto> teacherDtos = teacherService.convertListToDto(teachers);
+public ResponseEntity<ApiResponse> getAllTeachers(@RequestBody TeacherFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+    Page<Teacher> teachers = teacherService.getAllTeachers(request, pageable);
+    Page<TeacherDto> teacherDtos = teacherService.convertPageToDto(teachers);
     return ResponseEntity.ok(new ApiResponse("success", teacherDtos));
   }
 

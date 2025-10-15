@@ -3,6 +3,9 @@ package com.schoolmanager.schoolhub.service.timetable;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.TimetableDto;
@@ -14,8 +17,10 @@ import com.schoolmanager.schoolhub.model.Subject;
 import com.schoolmanager.schoolhub.model.Teacher;
 import com.schoolmanager.schoolhub.model.Timetable;
 import com.schoolmanager.schoolhub.repository.TimetableRepository;
+import com.schoolmanager.schoolhub.repository.specification.TimetableSpecification;
 import com.schoolmanager.schoolhub.request.AddTimetableRequest;
 import com.schoolmanager.schoolhub.request.UpdateTimetableRequest;
+import com.schoolmanager.schoolhub.request.requestFilter.TimetableFilterRequest;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
 import com.schoolmanager.schoolhub.service.period.IPeriodService;
 import com.schoolmanager.schoolhub.service.semester.ISemesterService;
@@ -35,6 +40,31 @@ public class TimetableService implements ITimetableService {
   private final IPeriodService periodService;
   private final ISubjectService subjectService;
   private final ModelMapper modelMapper;
+
+  @Override
+  public Page<Timetable> getAllTimetables(TimetableFilterRequest request, Pageable pageable) {
+    if (request == null)
+      return timetableRepository.findAll(pageable);
+    
+    Specification<Timetable> spec = (root, query, cb) -> cb.conjunction();
+    
+    if (request.getId() != null)
+      spec = spec.and(TimetableSpecification.hasId(request.getId()));
+    if (request.getDayOfWeek() != null)
+      spec = spec.and(TimetableSpecification.hasDayOfWeek(request.getDayOfWeek().toString()));
+    if (request.getSemesterId() != null)
+      spec = spec.and(TimetableSpecification.hasSemester(request.getSemesterId()));
+    if (request.getClassroomId() != null)
+      spec = spec.and(TimetableSpecification.hasClassroom(request.getClassroomId()));
+    if (request.getTeacherId() != null)
+      spec = spec.and(TimetableSpecification.hasTeacher(request.getTeacherId()));
+    if (request.getPeriodId() != null)
+      spec = spec.and(TimetableSpecification.hasPeriod(request.getPeriodId()));
+    if (request.getSubjectId() != null)
+      spec = spec.and(TimetableSpecification.hasSubject(request.getSubjectId()));
+    
+    return timetableRepository.findAll(spec, pageable);
+  }
 
   @Override
   public Timetable getTimetableById(Long id) {
@@ -136,5 +166,10 @@ public class TimetableService implements ITimetableService {
   @Override
   public List<TimetableDto> convertListToDto(List<Timetable> timetables) {
     return timetables.stream().map(t -> convertToDto(t)).toList();
+  }
+
+  @Override
+  public Page<TimetableDto> convertPageToDto(Page<Timetable> timetables) {
+    return timetables.map(this::convertToDto);
   }
 }

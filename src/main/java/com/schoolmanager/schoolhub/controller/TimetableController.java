@@ -2,6 +2,9 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +20,7 @@ import com.schoolmanager.schoolhub.dto.TimetableDto;
 import com.schoolmanager.schoolhub.model.Timetable;
 import com.schoolmanager.schoolhub.request.AddTimetableRequest;
 import com.schoolmanager.schoolhub.request.UpdateTimetableRequest;
+import com.schoolmanager.schoolhub.request.requestFilter.TimetableFilterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.timetable.ITimetableService;
 
@@ -29,6 +33,14 @@ import lombok.RequiredArgsConstructor;
 public class TimetableController {
 
   private final ITimetableService timetableService;
+
+  @PreAuthorize("hasRole('ADMIN')")
+  @GetMapping("/all")
+  public ResponseEntity<ApiResponse> getAllTimetables(@RequestBody TimetableFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+    Page<Timetable> timetables = timetableService.getAllTimetables(request, pageable);
+    Page<TimetableDto> timetableDtos = timetableService.convertPageToDto(timetables);
+    return ResponseEntity.ok(new ApiResponse("success", timetableDtos));
+  }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/{id}")

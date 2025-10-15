@@ -3,6 +3,9 @@ package com.schoolmanager.schoolhub.service.teacher;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.schoolmanager.schoolhub.dto.TeacherDto;
@@ -12,7 +15,9 @@ import com.schoolmanager.schoolhub.model.Teacher;
 import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.repository.SubjectRepository;
 import com.schoolmanager.schoolhub.repository.TeacherRepository;
+import com.schoolmanager.schoolhub.repository.specification.TeacherSpecification;
 import com.schoolmanager.schoolhub.request.AssignSubjectsToTeacherRequest;
+import com.schoolmanager.schoolhub.request.requestFilter.TeacherFilterRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,8 +30,26 @@ public class TeacherService implements ITeacherService {
   private final ModelMapper modelMapper;
 
   @Override
-  public List<Teacher> getAllTeachers() {
-    return teacherRepository.findAll();
+  public Page<Teacher> getAllTeachers(TeacherFilterRequest request, Pageable pageable) {
+    if (request == null)
+      return teacherRepository.findAll(pageable);
+    
+    Specification<Teacher> spec = (root, query, cb) -> cb.conjunction();
+
+    if (request.getId() != null)
+      spec = spec.and(TeacherSpecification.hasId(request.getId()));
+    if (request.getUsername() != null) 
+      spec = spec.and(TeacherSpecification.containsName(request.getUsername()));
+    if (request.getEmail() != null)
+      spec = spec.and(TeacherSpecification.containsEmail(request.getEmail()));
+    if (request.getAddress() != null)
+      spec = spec.and(TeacherSpecification.containsAddress(request.getAddress()));
+    if (request.getGender() != null)
+      spec = spec.and(TeacherSpecification.hasGender(request.getGender().toString()));
+    if (request.getSubjectId() != null)
+      spec = spec.and(TeacherSpecification.hasSubject(request.getSubjectId()));
+    
+    return teacherRepository.findAll(spec, pageable);
   }
 
   @Override
@@ -71,6 +94,11 @@ public class TeacherService implements ITeacherService {
   public List<TeacherDto> convertListToDto(List<Teacher> teachers) {
     List<TeacherDto> teacherDtos = teachers.stream().map(teacher -> convertToDto(teacher)).toList();
     return teacherDtos;
+  }
+
+  @Override
+  public Page<TeacherDto> convertPageToDto(Page<Teacher> teachers) {
+    return teachers.map(this::convertToDto);
   }
 
 }
