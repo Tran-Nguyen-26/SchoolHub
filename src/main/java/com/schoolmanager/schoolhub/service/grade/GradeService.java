@@ -55,4 +55,24 @@ public class GradeService implements IGradeService {
   public List<GradeDto> convertListToDto(List<Grade> grades) {
     return grades.stream().map(this::convertToDto).toList();
   }
+
+  @Override
+  public GradeDto getGradeDtoById(Long id) {
+    return convertToDto(getGradeById(id));
+  }
+
+  @Override
+  public List<GradeDto> getAllGradeDtos() {
+    return convertListToDto(getAllGrades());
+  }
+
+  @Override
+  public GradeDto getGradeDtoByLevel(String level) {
+    return convertToDto(getGradeByLevel(level));
+  }
+
+  @Override
+  public GradeDto addGradeAndReturnDto(String level) {
+    return convertToDto(addGrade(level));
+  }
 }

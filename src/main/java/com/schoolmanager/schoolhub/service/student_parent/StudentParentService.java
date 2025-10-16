@@ -59,4 +59,19 @@ public class StudentParentService implements IStudentParentService {
         parentDto,
         studentParent.getRelationship());
   }
+
+  @Override
+  public StudentParentDto getStudentParentDtoById(Long id) {
+    return convertToDto(getStudentParentById(id));
+  }
+
+  @Override
+  public StudentParentDto getStudentParentDtoByStudentIdAndParentId(Long studentId, Long parentId) {
+    return convertToDto(getStudentParentByStudentIdAndParentId(studentId, parentId));
+  }
+
+  @Override
+  public StudentParentDto assignRelationshipAndReturnDto(Long studentId, Long parentId, String relationship) {
+    return convertToDto(assignRelationship(studentId, parentId, relationship));
+  }
 }

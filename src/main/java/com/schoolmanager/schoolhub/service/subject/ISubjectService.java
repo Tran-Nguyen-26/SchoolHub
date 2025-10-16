@@ -8,6 +8,12 @@ import com.schoolmanager.schoolhub.request.AddSubjectRequest;
 import com.schoolmanager.schoolhub.request.UpdateSubjectRequest;
 
 public interface ISubjectService {
+
+
+  /**
+  * Internal method for business logic. Returns raw User entity.
+  */
+
   Subject getSubjectById(Long id);
 
   List<Subject> getSubjectByNames(List<String> names);
@@ -23,6 +29,30 @@ public interface ISubjectService {
   Subject addSubject(AddSubjectRequest request);
 
   Subject updateSubject(Long id, UpdateSubjectRequest request);
+
+  /**
+  * Public-facing method. Returns sanitized UserDto for API response.
+  */
+
+  SubjectDto getSubjectDtoById(Long id);
+
+  List<SubjectDto> getSubjectDtoByNames(List<String> names);
+
+  SubjectDto getSubjectDtoByNameAndGradeLevel(String name, String level);
+
+  List<SubjectDto> getAllSubjectDtos();
+
+  List<SubjectDto> getSubjectDtosByGradeId(Long gradeId);
+
+  List<SubjectDto> getSubjectDtosByGradeLevel(String level);
+
+  SubjectDto addSubjectAndReturnDto(AddSubjectRequest request);
+
+  SubjectDto updateSubjectAndReturnDto(Long id, UpdateSubjectRequest request);
+
+  /**
+   * Convert raw to dto
+   */  
 
   SubjectDto convertToDto(Subject subject);
 

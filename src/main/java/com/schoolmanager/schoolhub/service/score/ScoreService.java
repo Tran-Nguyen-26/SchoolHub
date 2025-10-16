@@ -81,4 +81,34 @@ public class ScoreService implements IScoreService {
     return scores.stream().map(this::convertToDto).toList();
   }
 
+  @Override
+  public ScoreDto getScoreDtoById(Long id) {
+    return convertToDto(getScoreById(id));
+  }
+
+  @Override
+  public List<ScoreDto> getScoreDtosByStudentId(Long studentId) {
+    return convertListToDto(getScoresByStudentId(studentId));
+  }
+
+  @Override
+  public List<ScoreDto> getScoreDtosByExamId(Long examId) {
+    return convertListToDto(getScoresByExamId(examId));
+  }
+
+  @Override
+  public ScoreDto getScoreDtoByStudentIdAndExamId(Long studentId, Long examId) {
+    return convertToDto(getScoreByStudentIdAndExamId(studentId, examId));
+  }
+
+  @Override
+  public ScoreDto assignScoreToStudentAndReturnDto(Long studentId, Long examId, AssignScoreRequest request) {
+    return convertToDto(assignScoreToStudent(studentId, examId, request));
+  }
+
+  @Override
+  public ScoreDto updateScoreAndReturnDto(Long scoreId, UpdateScoreRequest request) {
+    return convertToDto(updateScore(scoreId, request));
+  }
+
 }

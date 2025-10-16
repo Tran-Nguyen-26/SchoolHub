@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.TeacherDto;
-import com.schoolmanager.schoolhub.model.Teacher;
 import com.schoolmanager.schoolhub.request.AssignSubjectsToTeacherRequest;
 import com.schoolmanager.schoolhub.request.requestFilter.TeacherFilterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
@@ -32,25 +31,22 @@ public class TeacherController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
-public ResponseEntity<ApiResponse> getAllTeachers(@RequestBody TeacherFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<Teacher> teachers = teacherService.getAllTeachers(request, pageable);
-    Page<TeacherDto> teacherDtos = teacherService.convertPageToDto(teachers);
+  public ResponseEntity<ApiResponse> getAllTeachers(@RequestBody TeacherFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+    Page<TeacherDto> teacherDtos = teacherService.getAllTeacherDtos(request, pageable);
     return ResponseEntity.ok(new ApiResponse("success", teacherDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN') or (hasRole('TEACHER') and #id == authentication.principal.id)")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getTeacherById(@PathVariable Long id) {
-    Teacher teacher = teacherService.getTeacherById(id);
-    TeacherDto teacherDto = teacherService.convertToDto(teacher);
+    TeacherDto teacherDto = teacherService.getTeacherDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", teacherDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/subject/{name}")
   public ResponseEntity<ApiResponse> getTeachersBySubjectName(@PathVariable String name) {
-    List<Teacher> teachers = teacherService.getTeachersBySubjectName(name);
-    List<TeacherDto> teacherDtos = teacherService.convertListToDto(teachers);
+    List<TeacherDto> teacherDtos = teacherService.getTeacherDtosBySubjectName(name);
     return ResponseEntity.ok(new ApiResponse("success", teacherDtos));
   }
 
@@ -58,8 +54,7 @@ public ResponseEntity<ApiResponse> getAllTeachers(@RequestBody TeacherFilterRequ
   @PostMapping("/{teacherId}/assign-subjects")
   public ResponseEntity<ApiResponse> assignSubjectsToTeacher(@PathVariable Long teacherId,
       @RequestBody AssignSubjectsToTeacherRequest request) {
-    Teacher teacher = teacherService.assignSubjectsToTeacher(teacherId, request);
-    TeacherDto teacherDto = teacherService.convertToDto(teacher);
+    TeacherDto teacherDto = teacherService.assignSubjectsToTeacherAndReturnDto(teacherId, request);
     return ResponseEntity.ok(new ApiResponse("success", teacherDto));
   }
 }

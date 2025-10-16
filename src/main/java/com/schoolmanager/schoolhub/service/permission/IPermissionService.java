@@ -7,9 +7,19 @@ import com.schoolmanager.schoolhub.model.Permission;
 
 public interface IPermissionService {
 
+  //raw
+
   List<Permission> getAllPermissions();
 
   Permission getPermissionById(Long id);
+
+  //dto
+
+  List<PermissionDto> getAllPermissionDtos();
+
+  PermissionDto getPermissionDtoById(Long id);
+
+  //convert raw to dto
 
   PermissionDto convertToDto(Permission permission);
 

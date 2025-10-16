@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.SchoolYearDto;
-import com.schoolmanager.schoolhub.model.SchoolYear;
 import com.schoolmanager.schoolhub.request.AddNewSchoolYearRequest;
 import com.schoolmanager.schoolhub.request.UpdateSchoolYearRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
@@ -32,40 +31,35 @@ public class SchoolYearController {
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getSchoolYearById(@PathVariable Long id) {
-    SchoolYear schoolYear = schoolYearService.getSchoolYearById(id);
-    SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);
+    SchoolYearDto schoolYearDto = schoolYearService.getSchoolYearDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", schoolYearDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/year-name/{yearName}")
   public ResponseEntity<ApiResponse> getSchoolYearByYearName(@PathVariable String yearName) {
-    SchoolYear schoolYear = schoolYearService.getSchoolYearByYearName(yearName);
-    SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);
+    SchoolYearDto schoolYearDto = schoolYearService.getSchoolYearDtoByYearName(yearName);
     return ResponseEntity.ok(new ApiResponse("success", schoolYearDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllSchoolYears() {
-    List<SchoolYear> schoolYears = schoolYearService.getAllSchoolYears();
-    List<SchoolYearDto> schoolYearDtos = schoolYearService.convertListToDto(schoolYears);
+    List<SchoolYearDto> schoolYearDtos = schoolYearService.getAllSchoolYearDtos();
     return ResponseEntity.ok(new ApiResponse("success", schoolYearDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addNewSchoolYear(@Valid @RequestBody AddNewSchoolYearRequest request) {
-    SchoolYear schoolYear = schoolYearService.addNewSchoolYear(request);
-    SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);
+    SchoolYearDto schoolYearDto = schoolYearService.addNewSchoolYearAndReturnDto(request);
     return ResponseEntity.ok(new ApiResponse("success", schoolYearDto));
   }
 
   @PutMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updateSchoolYear(@Valid @PathVariable Long id,
       @RequestBody UpdateSchoolYearRequest request) {
-    SchoolYear schoolYear = schoolYearService.updateSchoolYear(id, request);
-    SchoolYearDto schoolYearDto = schoolYearService.convertToDto(schoolYear);
+    SchoolYearDto schoolYearDto = schoolYearService.updateSchoolYearAndReturnDto(id, request);
     return ResponseEntity.ok(new ApiResponse("success", schoolYearDto));
   }
 }

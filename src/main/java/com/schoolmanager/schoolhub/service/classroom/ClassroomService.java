@@ -99,4 +99,34 @@ public class ClassroomService implements IClassroomService {
   public List<ClassroomDto> convertListToDto(List<Classroom> classrooms) {
     return classrooms.stream().map(c -> convertToDto(c)).toList();
   }
+
+  @Override
+  public List<ClassroomDto> getAllClassroomDtos() {
+    return convertListToDto(getAllClassrooms());
+  }
+
+  @Override
+  public ClassroomDto getClassroomDtoById(Long id) {
+    return convertToDto(getClassroomById(id));
+  }
+
+  @Override
+  public ClassroomDto getClassroomDtoByName(String name) {
+    return convertToDto(getClassroomByName(name));
+  }
+
+  @Override
+  public List<ClassroomDto> getClassroomDtosByGradeName(String gradeName) {
+    return convertListToDto(getClassroomsByGradeName(gradeName));
+  }
+
+  @Override
+  public ClassroomDto addClassroomAndReturnDto(AddNewClassroomRequest request) {
+    return convertToDto(addClassroom(request));
+  }
+
+  @Override
+  public ClassroomDto updateHomeroomTeacherAndReturnDto(Long classroomId, Long teacherId) {
+    return convertToDto(updateHomeroomTeacher(classroomId, teacherId));
+  }
 }

@@ -66,4 +66,29 @@ public class PeriodService implements IPeriodService {
   public List<PeriodDto> convertListToDto(List<Period> periods) {
     return periods.stream().map(this::convertToDto).toList();
   }
+
+  @Override
+  public List<PeriodDto> getAllPeriodDtos() {
+    return convertListToDto(getAllPeriods());
+  }
+
+  @Override
+  public PeriodDto getPeriodDtoById(Long id) {
+    return convertToDto(getPeriodById(id));
+  }
+
+  @Override
+  public PeriodDto getPeriodDtoByPeriodNumber(int number) {
+    return convertToDto(getPeriodByPeriodNumber(number));
+  }
+
+  @Override
+  public PeriodDto addPeriodAndReturnDto(AddPeriodRequest request) {
+    return convertToDto(addPeriod(request));
+  }
+
+  @Override
+  public PeriodDto updatePeriodAndReturnDto(Long id, AddPeriodRequest request) {
+    return convertToDto(updatePeriod(id, request));
+  }
 }

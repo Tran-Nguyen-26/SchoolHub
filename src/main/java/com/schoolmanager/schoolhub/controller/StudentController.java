@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.StudentDto;
-import com.schoolmanager.schoolhub.model.Student;
 import com.schoolmanager.schoolhub.request.requestFilter.StudentFilterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.student.IStudentService;
@@ -32,32 +31,36 @@ public class StudentController {
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllStudents(@RequestBody StudentFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<Student> students = studentService.getAllStudents(request, pageable);
-    Page<StudentDto> studentDtos = studentService.convertPageToDto(students);
+    Page<StudentDto> studentDtos = studentService.getAllStudentDtos(request, pageable);
     return ResponseEntity.ok(new ApiResponse("success", studentDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or (hasRole('STUDENT') and #id == authentication.principal.id)")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getStudentById(@PathVariable Long id) {
-    Student student = studentService.getStudentById(id);
-    StudentDto studentDto = studentService.convertToDto(student);
+    StudentDto studentDto = studentService.getStudentDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", studentDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/classroom/id/{classroomId}")
   public ResponseEntity<ApiResponse> getStudentsByClassroomId(@PathVariable Long classroomId) {
-    List<Student> students = studentService.getStudentsByClassroomId(classroomId);
-    List<StudentDto> studentDtos = studentService.convertListToDto(students);
+    List<StudentDto> studentDtos = studentService.getStudentDtosByClassroomId(classroomId);
     return ResponseEntity.ok(new ApiResponse("success", studentDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/classroom/name/{classroomName}")
   public ResponseEntity<ApiResponse> getStudentsByClassroomName(@PathVariable String classroomName) {
-    List<Student> students = studentService.getStudentsByClassroomName(classroomName);
-    List<StudentDto> studentDtos = studentService.convertListToDto(students);
+    List<StudentDto> studentDtos = studentService.getStudentDtosByClassroomName(classroomName);
+    return ResponseEntity.ok(new ApiResponse("success", studentDtos));
+  }
+
+  @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+  @GetMapping("/grade/id/{gradeId}")
+  public ResponseEntity<ApiResponse> getStudentsByGradeId(@PathVariable Long gradeId,
+      @PageableDefault(page = 0, size = 5) Pageable pageable) {
+    Page<StudentDto> studentDtos = studentService.getStudentDtosByGradeId(gradeId, pageable);
     return ResponseEntity.ok(new ApiResponse("success", studentDtos));
   }
 
@@ -65,8 +68,7 @@ public class StudentController {
   @GetMapping("/grade/level/{level}")
   public ResponseEntity<ApiResponse> getStudentsByGradeLevel(@PathVariable String level,
       @PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<Student> students = studentService.getStudentsByGradeLevel(level, pageable);
-    Page<StudentDto> studentDtos = studentService.convertPageToDto(students);
+    Page<StudentDto> studentDtos = studentService.getStudentDtosByGradeLevel(level, pageable);
     return ResponseEntity.ok(new ApiResponse("success", studentDtos));
   }
 
@@ -74,8 +76,7 @@ public class StudentController {
   @PutMapping("/{studentId}/add-to-classroom/{classroomId}")
   public ResponseEntity<ApiResponse> addStudentToClassroom(@PathVariable Long studentId,
       @PathVariable Long classroomId) {
-    Student student = studentService.addStudentToClassroom(classroomId, studentId);
-    StudentDto studentDto = studentService.convertToDto(student);
+    StudentDto studentDto = studentService.addStudentToClassroomAndReturnDto(classroomId, studentId);
     return ResponseEntity.ok(new ApiResponse("success", studentDto));
   }
 }

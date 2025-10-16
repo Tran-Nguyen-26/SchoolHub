@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.schoolmanager.schoolhub.dto.RoleDto;
 import com.schoolmanager.schoolhub.enums.PermissionName;
 import com.schoolmanager.schoolhub.enums.RoleName;
-import com.schoolmanager.schoolhub.model.Role;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.role.IRoleService;
 
@@ -30,24 +29,21 @@ public class RoleController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllRoles() {
-    List<Role> roles = roleService.getAllRoles();
-    List<RoleDto> roleDtos = roleService.convertListToDto(roles);
+    List<RoleDto> roleDtos = roleService.getAllRoleDtos();
     return ResponseEntity.ok(new ApiResponse("success", roleDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getRoleById(@PathVariable Long id) {
-    Role role = roleService.getRoleById(id);
-    RoleDto roleDto = roleService.convertToDto(role);
+    RoleDto roleDto = roleService.getRoleDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", roleDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/name/{name}")
   public ResponseEntity<ApiResponse> getRoleByName(@PathVariable RoleName name) {
-    Role role = roleService.getRoleByName(name);
-    RoleDto roleDto = roleService.convertToDto(role);
+    RoleDto roleDto = roleService.getRoleDtoByName(name);
     return ResponseEntity.ok(new ApiResponse("success", roleDto));
   }
 
@@ -55,8 +51,7 @@ public class RoleController {
   @PostMapping("/{id}/add/permission")
   public ResponseEntity<ApiResponse> assignPermissionsToRole(@PathVariable Long id,
       @RequestBody List<PermissionName> permissionNames) {
-    Role role = roleService.assignPermissionsToRole(id, permissionNames);
-    RoleDto roleDto = roleService.convertToDto(role);
+    RoleDto roleDto = roleService.assignPermissionsToRoleAndReturnDto(id, permissionNames);
     return ResponseEntity.ok(new ApiResponse("success", roleDto));
   }
 }

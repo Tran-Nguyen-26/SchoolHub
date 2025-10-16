@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.SemesterDto;
-import com.schoolmanager.schoolhub.model.Semester;
 import com.schoolmanager.schoolhub.request.AddSemesterRequest;
 import com.schoolmanager.schoolhub.request.UpdateSemesterRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
@@ -33,32 +31,21 @@ public class SemesterController {
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getSemesterById(@PathVariable Long id) {
-    Semester semester = semesterService.getSemesterById(id);
-    SemesterDto semesterDto = semesterService.convertToDto(semester);
-    return ResponseEntity.ok(new ApiResponse("success", semesterDto));
-  }
-
-  @GetMapping("/by-name-and-schoolyear")
-  public ResponseEntity<ApiResponse> getSemesterByNameAndSchoolYearName(@RequestParam String semesterName,
-      @RequestParam String schoolYearName) {
-    Semester semester = semesterService.getSemesterBySemesterNameAndSchoolYearName(semesterName, schoolYearName);
-    SemesterDto semesterDto = semesterService.convertToDto(semester);
+    SemesterDto semesterDto = semesterService.getSemesterDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", semesterDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/schoolyear/{schoolYearId}")
   public ResponseEntity<ApiResponse> getSemesterBySchoolYearId(@PathVariable Long schoolYearId) {
-    List<Semester> semesters = semesterService.getSemestersBySchoolYearId(schoolYearId);
-    List<SemesterDto> semesterDtos = semesterService.convertListToDto(semesters);
+    List<SemesterDto> semesterDtos = semesterService.getSemesterDtosBySchoolYearId(schoolYearId);
     return ResponseEntity.ok(new ApiResponse("success", semesterDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addSemesters(@Valid @RequestBody AddSemesterRequest request) {
-    List<Semester> semesters = semesterService.addSemesters(request);
-    List<SemesterDto> semesterDtos = semesterService.convertListToDto(semesters);
+    List<SemesterDto> semesterDtos = semesterService.addSemestersAndReturnDtos(request);
     return ResponseEntity.ok(new ApiResponse("success", semesterDtos));
   }
 
@@ -66,8 +53,7 @@ public class SemesterController {
   @PutMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updateSemester(@PathVariable Long id,
       @RequestBody UpdateSemesterRequest request) {
-    Semester semester = semesterService.updateSemester(id, request);
-    SemesterDto semesterDto = semesterService.convertToDto(semester);
+    SemesterDto semesterDto = semesterService.updateSemesterAndReturnDto(id, request);
     return ResponseEntity.ok(new ApiResponse("success", semesterDto));
   }
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.ScoreDto;
-import com.schoolmanager.schoolhub.model.Score;
 import com.schoolmanager.schoolhub.request.AssignScoreRequest;
 import com.schoolmanager.schoolhub.request.UpdateScoreRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
@@ -32,24 +31,21 @@ public class ScoreController {
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getScoreById(@PathVariable Long id) {
-    Score score = scoreService.getScoreById(id);
-    ScoreDto scoreDto = scoreService.convertToDto(score);
+    ScoreDto scoreDto = scoreService.getScoreDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", scoreDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/student/{studentId}")
   public ResponseEntity<ApiResponse> getScoreByStudentId(@PathVariable Long studentId) {
-    List<Score> scores = scoreService.getScoresByStudentId(studentId);
-    List<ScoreDto> scoreDtos = scoreService.convertListToDto(scores);
+    List<ScoreDto> scoreDtos = scoreService.getScoreDtosByStudentId(studentId);
     return ResponseEntity.ok(new ApiResponse("success", scoreDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or (hasRole('STUDENT') and @securityService.isStudentInExamId(#examId))")
   @GetMapping("/exam/{examId}")
   public ResponseEntity<ApiResponse> getScoreByExamId(@PathVariable Long examId) {
-    List<Score> scores = scoreService.getScoresByExamId(examId);
-    List<ScoreDto> scoreDtos = scoreService.convertListToDto(scores);
+    List<ScoreDto> scoreDtos = scoreService.getScoreDtosByExamId(examId);
     return ResponseEntity.ok(new ApiResponse("success", scoreDtos));
   }
 
@@ -57,8 +53,7 @@ public class ScoreController {
   @GetMapping("/student/{studentId}/exam/{examId}")
   public ResponseEntity<ApiResponse> getScoreByStudentIdAndExamId(@PathVariable Long studentId,
       @PathVariable Long examId) {
-    Score score = scoreService.getScoreByStudentIdAndExamId(studentId, examId);
-    ScoreDto scoreDto = scoreService.convertToDto(score);
+    ScoreDto scoreDto = scoreService.getScoreDtoByStudentIdAndExamId(studentId, examId);
     return ResponseEntity.ok(new ApiResponse("success", scoreDto));
   }
 
@@ -67,8 +62,7 @@ public class ScoreController {
   public ResponseEntity<ApiResponse> assignScoreToStudent(@Valid @PathVariable Long studentId,
       @PathVariable Long examId,
       @RequestBody AssignScoreRequest request) {
-    Score score = scoreService.assignScoreToStudent(studentId, examId, request);
-    ScoreDto scoreDto = scoreService.convertToDto(score);
+    ScoreDto scoreDto = scoreService.assignScoreToStudentAndReturnDto(studentId, examId, request);
     return ResponseEntity.ok(new ApiResponse("success", scoreDto));
   }
 
@@ -76,8 +70,7 @@ public class ScoreController {
   @PutMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updateScore(@PathVariable Long scoreId,
       @RequestBody UpdateScoreRequest request) {
-    Score score = scoreService.updateScore(scoreId, request);
-    ScoreDto scoreDto = scoreService.convertToDto(score);
+    ScoreDto scoreDto = scoreService.updateScoreAndReturnDto(scoreId, request);
     return ResponseEntity.ok(new ApiResponse("success", scoreDto));
   }
 }

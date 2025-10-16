@@ -70,4 +70,24 @@ public class EventService implements IEventService {
     return events.stream().map(e -> convertToDto(e)).toList();
   }
 
+  @Override
+  public EventDto getEventDtoById(Long id) {
+    return convertToDto(getEventById(id));
+  }
+
+  @Override
+  public List<EventDto> getEventDtosByClassroomId(Long clasroomId) {
+    return convertListToDto(getEventsByClassroomId(clasroomId));
+  }
+
+  @Override
+  public List<EventDto> getEventDtosByClassroomIdAndSemesterId(Long classroomId, Long semesterId) {
+    return convertListToDto(getEventsByClassroomIdAndSemesterId(classroomId, semesterId));
+  }
+
+  @Override
+  public EventDto addEventAndReturnDto(AddEventRequest request) {
+    return convertToDto(addEvent(request));
+  }
+
 }

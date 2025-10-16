@@ -61,4 +61,19 @@ public class ExamService implements IExamService {
     examDto.setSchoolYearName(exam.getSemester().getSchoolYear().getYearName());
     return examDto;
   }
+
+  @Override
+  public ExamDto getExamDtoById(Long id) {
+    return convertToDto(getExamById(id));
+  }
+
+  @Override
+  public ExamDto addExamAndReturnDto(AddExamRequest request) {
+    return convertToDto(addExam(request));
+  }
+
+  @Override
+  public ExamDto updateExamAndReturnDto(Long id, AddExamRequest request) {
+    return convertToDto(updateExam(id, request));
+  }
 }

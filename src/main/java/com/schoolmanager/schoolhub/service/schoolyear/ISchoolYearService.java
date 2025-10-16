@@ -8,6 +8,9 @@ import com.schoolmanager.schoolhub.request.AddNewSchoolYearRequest;
 import com.schoolmanager.schoolhub.request.UpdateSchoolYearRequest;
 
 public interface ISchoolYearService {
+
+  //raw
+
   SchoolYear getSchoolYearById(Long id);
 
   SchoolYear getSchoolYearByYearName(String yearName);
@@ -17,6 +20,21 @@ public interface ISchoolYearService {
   SchoolYear addNewSchoolYear(AddNewSchoolYearRequest request);
 
   SchoolYear updateSchoolYear(Long id, UpdateSchoolYearRequest request);
+
+  //dto
+
+  SchoolYearDto getSchoolYearDtoById(Long id);
+
+  SchoolYearDto getSchoolYearDtoByYearName(String yearName);
+
+  List<SchoolYearDto> getAllSchoolYearDtos();
+
+  SchoolYearDto addNewSchoolYearAndReturnDto(AddNewSchoolYearRequest request);
+
+  SchoolYearDto updateSchoolYearAndReturnDto(Long id, UpdateSchoolYearRequest request);
+
+
+  //convert raw to dto
 
   SchoolYearDto convertToDto(SchoolYear schoolYear);
 

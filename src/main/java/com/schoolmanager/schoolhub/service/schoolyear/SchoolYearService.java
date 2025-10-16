@@ -65,4 +65,29 @@ public class SchoolYearService implements ISchoolYearService {
   public List<SchoolYearDto> convertListToDto(List<SchoolYear> schoolYears) {
     return schoolYears.stream().map(this::convertToDto).toList();
   }
+
+  @Override
+  public SchoolYearDto getSchoolYearDtoById(Long id) {
+    return convertToDto(getSchoolYearById(id));
+  }
+
+  @Override
+  public SchoolYearDto getSchoolYearDtoByYearName(String yearName) {
+    return convertToDto(getSchoolYearByYearName(yearName));
+  }
+
+  @Override
+  public List<SchoolYearDto> getAllSchoolYearDtos() {
+    return convertListToDto(getAllSchoolYears());
+  }
+
+  @Override
+  public SchoolYearDto addNewSchoolYearAndReturnDto(AddNewSchoolYearRequest request) {
+    return convertToDto(addNewSchoolYear(request));
+  }
+
+  @Override
+  public SchoolYearDto updateSchoolYearAndReturnDto(Long id, UpdateSchoolYearRequest request) {
+    return convertToDto(updateSchoolYear(id, request));
+  }
 }

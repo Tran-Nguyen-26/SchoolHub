@@ -50,4 +50,19 @@ public class ParentService implements IParentService {
     return parents.stream().map(p -> convertToDto(p)).toList();
   }
 
+  @Override
+  public List<ParentDto> getAllParentDtos() {
+    return convertListToDto(getAllParents());
+  }
+
+  @Override
+  public List<ParentDto> getParentDtosByStudentId(Long studentId) {
+    return convertListToDto(getParentsByStudentId(studentId));
+  }
+
+  @Override
+  public ParentDto getParentDtoById(Long id) {
+    return convertToDto(getParentById(id));
+  }
+
 }

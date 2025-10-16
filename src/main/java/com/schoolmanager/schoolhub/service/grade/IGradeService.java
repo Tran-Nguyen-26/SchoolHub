@@ -6,6 +6,9 @@ import com.schoolmanager.schoolhub.dto.GradeDto;
 import com.schoolmanager.schoolhub.model.Grade;
 
 public interface IGradeService {
+
+  //raw
+
   Grade getGradeById(Long id);
 
   List<Grade> getAllGrades();
@@ -13,6 +16,18 @@ public interface IGradeService {
   Grade getGradeByLevel(String level);
 
   Grade addGrade(String level);
+
+  //dto
+
+  GradeDto getGradeDtoById(Long id);
+
+  List<GradeDto> getAllGradeDtos();
+
+  GradeDto getGradeDtoByLevel(String level);
+
+  GradeDto addGradeAndReturnDto(String level);
+
+  //convert raw to dto
 
   GradeDto convertToDto(Grade grade);
 

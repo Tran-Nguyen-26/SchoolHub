@@ -7,6 +7,9 @@ import com.schoolmanager.schoolhub.model.Period;
 import com.schoolmanager.schoolhub.request.AddPeriodRequest;
 
 public interface IPeriodService {
+
+  //raw
+
   List<Period> getAllPeriods();
 
   Period getPeriodById(Long id);
@@ -16,6 +19,20 @@ public interface IPeriodService {
   Period addPeriod(AddPeriodRequest request);
 
   Period updatePeriod(Long id, AddPeriodRequest request);
+
+  //dto
+
+  List<PeriodDto> getAllPeriodDtos();
+
+  PeriodDto getPeriodDtoById(Long id);
+
+  PeriodDto getPeriodDtoByPeriodNumber(int number);
+
+  PeriodDto addPeriodAndReturnDto(AddPeriodRequest request);
+
+  PeriodDto updatePeriodAndReturnDto(Long id, AddPeriodRequest request);
+
+  //convert raw to dto
 
   PeriodDto convertToDto(Period period);
 

@@ -172,4 +172,34 @@ public class TimetableService implements ITimetableService {
   public Page<TimetableDto> convertPageToDto(Page<Timetable> timetables) {
     return timetables.map(this::convertToDto);
   }
+
+  @Override
+  public Page<TimetableDto> getAllTimtableDtos(TimetableFilterRequest request, Pageable pageable) {
+    return convertPageToDto(getAllTimetables(request, pageable));
+  }
+
+  @Override
+  public TimetableDto getTimetableDtoById(Long id) {
+    return convertToDto(getTimetableById(id));
+  }
+
+  @Override
+  public List<TimetableDto> getAllTimetableDtosByClassroomIdAndSemesterId(Long classroomId, Long semesterId) {
+    return convertListToDto(getAllTimetablesByClassroomIdAndSemesterId(classroomId, semesterId));
+  }
+
+  @Override
+  public List<TimetableDto> getAllTimetableDtosByTeacherIdAndSemesterId(Long teacherId, Long semesterId) {
+    return convertListToDto(getAllTimetablesByTeacherIdAndSemesterId(teacherId, semesterId));
+  }
+
+  @Override
+  public TimetableDto addTimetableAndReturnDto(AddTimetableRequest request) {
+    return convertToDto(addTimetable(request));
+  }
+
+  @Override
+  public TimetableDto updateTimetableAndReturnDto(Long id, UpdateTimetableRequest request) {
+    return convertToDto(updateTimetable(id, request));
+  }
 }

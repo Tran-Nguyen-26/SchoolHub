@@ -112,4 +112,40 @@ public class StudentService implements IStudentService {
   public Page<StudentDto> convertPageToDto(Page<Student> students) {
     return students.map(this::convertToDto);
   }
+
+	@Override
+	public Page<StudentDto> getAllStudentDtos(StudentFilterRequest request, Pageable pageable) {
+		Page<Student> studentDtos = getAllStudents(request, pageable);
+    return convertPageToDto(studentDtos);
+	}
+
+	@Override
+	public StudentDto getStudentDtoById(Long id) {
+		return convertToDto(getStudentById(id));
+	}
+
+	@Override
+	public List<StudentDto> getStudentDtosByClassroomId(Long classroomId) {
+		return convertListToDto(getStudentsByClassroomId(classroomId));
+	}
+
+	@Override
+	public List<StudentDto> getStudentDtosByClassroomName(String classroomName) {
+		return convertListToDto(getStudentsByClassroomName(classroomName));
+	}
+
+	@Override
+	public Page<StudentDto> getStudentDtosByGradeId(Long gradeId, Pageable pageable) {
+		return convertPageToDto(getStudentsByGradeId(gradeId, pageable));
+	}
+
+	@Override
+	public Page<StudentDto> getStudentDtosByGradeLevel(String level, Pageable pageable) {
+		return convertPageToDto(getStudentsByGradeLevel(level, pageable));
+	}
+
+	@Override
+	public StudentDto addStudentToClassroomAndReturnDto(Long classroomId, Long studentId) {
+		return convertToDto(addStudentToClassroom(classroomId, studentId));
+	}
 }

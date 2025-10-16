@@ -7,6 +7,9 @@ import com.schoolmanager.schoolhub.model.Event;
 import com.schoolmanager.schoolhub.request.AddEventRequest;
 
 public interface IEventService {
+
+  //raw
+
   Event getEventById(Long id);
 
   List<Event> getEventsByClassroomId(Long clasroomId);
@@ -14,6 +17,19 @@ public interface IEventService {
   List<Event> getEventsByClassroomIdAndSemesterId(Long classroomId, Long semesterId);
 
   Event addEvent(AddEventRequest request);
+
+  //dto
+
+  EventDto getEventDtoById(Long id);
+
+  List<EventDto> getEventDtosByClassroomId(Long clasroomId);
+
+  List<EventDto> getEventDtosByClassroomIdAndSemesterId(Long classroomId, Long semesterId);
+
+  EventDto addEventAndReturnDto(AddEventRequest request);
+
+
+  //convert raw to dto
 
   EventDto convertToDto(Event event);
 

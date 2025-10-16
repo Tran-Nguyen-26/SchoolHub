@@ -101,4 +101,29 @@ public class TeacherService implements ITeacherService {
     return teachers.map(this::convertToDto);
   }
 
+  @Override
+  public Page<TeacherDto> getAllTeacherDtos(TeacherFilterRequest request, Pageable pageable) {
+    return convertPageToDto(getAllTeachers(request, pageable));
+  }
+
+  @Override
+  public TeacherDto getTeacherDtoById(Long id) {
+    return convertToDto(getTeacherById(id));
+  }
+
+  @Override
+  public TeacherDto getTeacherDtoByUserEmail(String email) {
+    return convertToDto(getTeacherByUserEmail(email));
+  }
+
+  @Override
+  public List<TeacherDto> getTeacherDtosBySubjectName(String subjectName) {
+    return convertListToDto(getTeachersBySubjectName(subjectName));
+  }
+
+  @Override
+  public TeacherDto assignSubjectsToTeacherAndReturnDto(Long teacherId, AssignSubjectsToTeacherRequest request) {
+    return convertToDto(assignSubjectsToTeacher(teacherId, request));
+  }
+
 }

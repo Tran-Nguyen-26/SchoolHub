@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.ClassroomDto;
-import com.schoolmanager.schoolhub.model.Classroom;
 import com.schoolmanager.schoolhub.request.AddNewClassroomRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.classroom.IClassroomService;
@@ -32,40 +31,35 @@ public class ClassroomController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllClassrooms() {
-    List<Classroom> classrooms = classroomService.getAllClassrooms();
-    List<ClassroomDto> classroomDtos = classroomService.convertListToDto(classrooms);
+    List<ClassroomDto> classroomDtos = classroomService.getAllClassroomDtos();
     return ResponseEntity.ok(new ApiResponse("success", classroomDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN') or (hasRole('STUDENT') and @securityService.isStudentInClassroomId(#id)) or hasRole('TEACHER')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getClassroomById(@PathVariable Long id) {
-    Classroom classroom = classroomService.getClassroomById(id);
-    ClassroomDto classroomDto = classroomService.convertToDto(classroom);
+    ClassroomDto classroomDto = classroomService.getClassroomDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", classroomDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or (hasRole('STUDENT') and @securityService.isStudentInClassroomName(#name)) or hasRole('TEACHER')")
   @GetMapping("/name/{name}")
   public ResponseEntity<ApiResponse> getClassroomByName(@PathVariable String name) {
-    Classroom classroom = classroomService.getClassroomByName(name);
-    ClassroomDto classroomDto = classroomService.convertToDto(classroom);
+    ClassroomDto classroomDto = classroomService.getClassroomDtoByName(name);
     return ResponseEntity.ok(new ApiResponse("success", classroomDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/grade/{level}")
   public ResponseEntity<ApiResponse> getClassroomsByGradeName(@PathVariable String level) {
-    List<Classroom> classrooms = classroomService.getClassroomsByGradeName(level);
-    List<ClassroomDto> classroomDtos = classroomService.convertListToDto(classrooms);
+    List<ClassroomDto> classroomDtos = classroomService.getClassroomDtosByGradeName(level);
     return ResponseEntity.ok(new ApiResponse("success", classroomDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> createClassroom(@Valid @RequestBody AddNewClassroomRequest request) {
-    Classroom classroom = classroomService.addClassroom(request);
-    ClassroomDto classroomDto = classroomService.convertToDto(classroom);
+    ClassroomDto classroomDto = classroomService.addClassroomAndReturnDto(request);
     return ResponseEntity.ok(new ApiResponse("success", classroomDto));
   }
 
@@ -73,8 +67,7 @@ public class ClassroomController {
   @PutMapping("/{classroomId}/update-homeroomTeacher/{teacherId}")
   public ResponseEntity<ApiResponse> updateHomeroomTeacher(@PathVariable Long classroomId,
       @PathVariable Long teacherId) {
-    Classroom classroom = classroomService.updateHomeroomTeacher(classroomId, teacherId);
-    ClassroomDto classroomDto = classroomService.convertToDto(classroom);
+    ClassroomDto classroomDto = classroomService.updateHomeroomTeacherAndReturnDto(classroomId, teacherId);
     return ResponseEntity.ok(new ApiResponse("success", classroomDto));
   }
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.StudentParentDto;
-import com.schoolmanager.schoolhub.model.StudentParent;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.student_parent.IStudentParentService;
 
@@ -26,8 +25,7 @@ public class StudentParentController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getStudentParentById(@PathVariable Long id) {
-    StudentParent studentParent = studentParentService.getStudentParentById(id);
-    StudentParentDto studentParentDto = studentParentService.convertToDto(studentParent);
+    StudentParentDto studentParentDto = studentParentService.getStudentParentDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", studentParentDto));
   }
 
@@ -35,8 +33,7 @@ public class StudentParentController {
   @GetMapping("/studentId/{studentId}/parentId/{parentId}")
   public ResponseEntity<ApiResponse> getStudentParentByStudentIdAndParentId(@PathVariable Long studentId,
       @PathVariable Long parentId) {
-    StudentParent studentParent = studentParentService.getStudentParentByStudentIdAndParentId(studentId, parentId);
-    StudentParentDto studentParentDto = studentParentService.convertToDto(studentParent);
+    StudentParentDto studentParentDto = studentParentService.getStudentParentDtoByStudentIdAndParentId(studentId, parentId);
     return ResponseEntity.ok(new ApiResponse("success", studentParentDto));
   }
 
@@ -44,8 +41,7 @@ public class StudentParentController {
   @PostMapping("/assign")
   public ResponseEntity<ApiResponse> assginRelationship(@RequestParam Long studentId, @RequestParam Long parentId,
       @RequestParam String relationship) {
-    StudentParent studentParent = studentParentService.assignRelationship(studentId, parentId, relationship);
-    StudentParentDto studentParentDto = studentParentService.convertToDto(studentParent);
+    StudentParentDto studentParentDto = studentParentService.assignRelationshipAndReturnDto(studentId, parentId, relationship);
     return ResponseEntity.ok(new ApiResponse("success", studentParentDto));
   }
 }

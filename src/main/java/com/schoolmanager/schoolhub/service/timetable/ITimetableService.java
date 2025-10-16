@@ -12,6 +12,10 @@ import com.schoolmanager.schoolhub.request.UpdateTimetableRequest;
 import com.schoolmanager.schoolhub.request.requestFilter.TimetableFilterRequest;
 
 public interface ITimetableService {
+  
+  /**
+  * Internal method for business logic. Returns raw User entity.
+  */
 
   Page<Timetable> getAllTimetables(TimetableFilterRequest request, Pageable pageable);
 
@@ -26,6 +30,28 @@ public interface ITimetableService {
   Timetable updateTimetable(Long id, UpdateTimetableRequest request);
 
   void deleteTimetableById(Long id);
+
+  //=================================================//
+
+  /**
+  * Public-facing method. Returns sanitized UserDto for API response.
+  */
+
+  Page<TimetableDto> getAllTimtableDtos(TimetableFilterRequest request, Pageable pageable);
+
+  TimetableDto getTimetableDtoById(Long id);
+
+  List<TimetableDto> getAllTimetableDtosByClassroomIdAndSemesterId(Long classroomId, Long semesterId);
+
+  List<TimetableDto> getAllTimetableDtosByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
+
+  TimetableDto addTimetableAndReturnDto(AddTimetableRequest request);
+
+  TimetableDto updateTimetableAndReturnDto(Long id, UpdateTimetableRequest request);
+
+  /**
+   * Convert raw to dto
+   */ 
 
   TimetableDto convertToDto(Timetable timetable);
 

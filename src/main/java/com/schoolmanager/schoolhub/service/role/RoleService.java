@@ -65,4 +65,24 @@ public class RoleService implements IRoleService {
   public List<RoleDto> convertListToDto(List<Role> roles) {
     return roles.stream().map(this::convertToDto).toList();
   }
+
+  @Override
+  public List<RoleDto> getAllRoleDtos() {
+    return convertListToDto(getAllRoles());
+  }
+
+  @Override
+  public RoleDto getRoleDtoById(Long id) {
+    return convertToDto(getRoleById(id));
+  }
+
+  @Override
+  public RoleDto getRoleDtoByName(RoleName name) {
+    return convertToDto(getRoleByName(name));
+  }
+
+  @Override
+  public RoleDto assignPermissionsToRoleAndReturnDto(Long roleId, List<PermissionName> permissionNames) {
+    return convertToDto(assignPermissionsToRole(roleId, permissionNames));
+  }
 }

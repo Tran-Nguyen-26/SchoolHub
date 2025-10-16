@@ -44,4 +44,14 @@ public class PermissionService implements IPermissionService {
     return permissions.stream().map(this::convertToDto).toList();
   }
 
+  @Override
+  public List<PermissionDto> getAllPermissionDtos() {
+    return convertListToDto(getAllPermissions());
+  }
+
+  @Override
+  public PermissionDto getPermissionDtoById(Long id) {
+    return convertToDto(getPermissionById(id));
+  }
+
 }

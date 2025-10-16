@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.PermissionDto;
-import com.schoolmanager.schoolhub.model.Permission;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.permission.IPermissionService;
 
@@ -26,16 +25,14 @@ public class PermissionController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllPermissions() {
-    List<Permission> permission = permissionService.getAllPermissions();
-    List<PermissionDto> permissionDtos = permissionService.convertListToDto(permission);
+    List<PermissionDto> permissionDtos = permissionService.getAllPermissionDtos();
     return ResponseEntity.ok(new ApiResponse("success", permissionDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getPermissionById(@PathVariable Long id) {
-    Permission permission = permissionService.getPermissionById(id);
-    PermissionDto permissionDto = permissionService.convertToDto(permission);
+    PermissionDto permissionDto = permissionService.getPermissionDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", permissionDto));
   }
 }

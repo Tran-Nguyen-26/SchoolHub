@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.PeriodDto;
-import com.schoolmanager.schoolhub.model.Period;
 import com.schoolmanager.schoolhub.request.AddPeriodRequest;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.period.IPeriodService;
@@ -31,40 +30,35 @@ public class PeriodController {
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllPeriods() {
-    List<Period> periods = periodService.getAllPeriods();
-    List<PeriodDto> periodDtos = periodService.convertListToDto(periods);
+    List<PeriodDto> periodDtos = periodService.getAllPeriodDtos();
     return ResponseEntity.ok(new ApiResponse("success", periodDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getPeriodById(@PathVariable Long id) {
-    Period period = periodService.getPeriodById(id);
-    PeriodDto periodDto = periodService.convertToDto(period);
+    PeriodDto periodDto = periodService.getPeriodDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", periodDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/number/{number}")
   public ResponseEntity<ApiResponse> getPeriodByPeriodNumber(@PathVariable int number) {
-    Period period = periodService.getPeriodByPeriodNumber(number);
-    PeriodDto periodDto = periodService.convertToDto(period);
+    PeriodDto periodDto = periodService.getPeriodDtoByPeriodNumber(number);
     return ResponseEntity.ok(new ApiResponse("success", periodDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addPeriod(@Valid @RequestBody AddPeriodRequest request) {
-    Period period = periodService.addPeriod(request);
-    PeriodDto periodDto = periodService.convertToDto(period);
+    PeriodDto periodDto = periodService.addPeriodAndReturnDto(request);
     return ResponseEntity.ok(new ApiResponse("success", periodDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updatePeriod(@PathVariable Long id, @RequestBody AddPeriodRequest request) {
-    Period period = periodService.updatePeriod(id, request);
-    PeriodDto periodDto = periodService.convertToDto(period);
+    PeriodDto periodDto = periodService.updatePeriodAndReturnDto(id, request);
     return ResponseEntity.ok(new ApiResponse("success", periodDto));
   }
 }

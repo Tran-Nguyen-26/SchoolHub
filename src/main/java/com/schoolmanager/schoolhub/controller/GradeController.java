@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.GradeDto;
-import com.schoolmanager.schoolhub.model.Grade;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.grade.IGradeService;
 
@@ -28,32 +27,28 @@ public class GradeController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllGrades() {
-    List<Grade> grades = gradeService.getAllGrades();
-    List<GradeDto> gradeDtos = gradeService.convertListToDto(grades);
+    List<GradeDto> gradeDtos = gradeService.getAllGradeDtos();
     return ResponseEntity.ok(new ApiResponse("success", gradeDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getGradeById(@PathVariable Long id) {
-    Grade grade = gradeService.getGradeById(id);
-    GradeDto gradeDto = gradeService.convertToDto(grade);
+    GradeDto gradeDto = gradeService.getGradeDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", gradeDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/level/{level}")
   public ResponseEntity<ApiResponse> getGradeByLevel(@PathVariable String level) {
-    Grade grade = gradeService.getGradeByLevel(level);
-    GradeDto gradeDto = gradeService.convertToDto(grade);
+    GradeDto gradeDto = gradeService.getGradeDtoByLevel(level);
     return ResponseEntity.ok(new ApiResponse("success", gradeDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addGrade(@RequestBody String level) {
-    Grade grade = gradeService.addGrade(level);
-    GradeDto gradeDto = gradeService.convertToDto(grade);
+    GradeDto gradeDto = gradeService.addGradeAndReturnDto(level);
     return ResponseEntity.ok(new ApiResponse("success", gradeDto));
   }
 }

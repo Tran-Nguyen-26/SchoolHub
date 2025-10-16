@@ -43,4 +43,14 @@ public class AdminService implements IAdminService {
   public List<AdminDto> convertListToDto(List<Admin> admins) {
     return admins.stream().map(a -> convertToDto(a)).toList();
   }
+
+  @Override
+  public List<AdminDto> getAllAdminDtos() {
+    return convertListToDto(getAllAdmins());
+  }
+
+  @Override
+  public AdminDto getAdminDtoById(Long id) {
+    return convertToDto(getAdminById(id));
+  }
 }

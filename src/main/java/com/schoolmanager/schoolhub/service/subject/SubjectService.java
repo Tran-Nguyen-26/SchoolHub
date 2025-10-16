@@ -91,4 +91,44 @@ public class SubjectService implements ISubjectService {
     return subjects.stream().map(this::convertToDto).toList();
   }
 
+  @Override
+  public SubjectDto getSubjectDtoById(Long id) {
+    return convertToDto(getSubjectById(id));
+  }
+
+  @Override
+  public List<SubjectDto> getSubjectDtoByNames(List<String> names) {
+    return convertListToDto(getSubjectByNames(names));
+  }
+
+  @Override
+  public SubjectDto getSubjectDtoByNameAndGradeLevel(String name, String level) {
+    return convertToDto(getSubjectByNameAndGradeLevel(name, level));
+  }
+
+  @Override
+  public List<SubjectDto> getAllSubjectDtos() {
+    return convertListToDto(getAllSubjects());
+  }
+
+  @Override
+  public List<SubjectDto> getSubjectDtosByGradeId(Long gradeId) {
+    return convertListToDto(getSubjectsByGradeId(gradeId));
+  }
+
+  @Override
+  public List<SubjectDto> getSubjectDtosByGradeLevel(String level) {
+    return convertListToDto(getSubjectsByGradeLevel(level));
+  }
+
+  @Override
+  public SubjectDto addSubjectAndReturnDto(AddSubjectRequest request) {
+    return convertToDto(addSubject(request));
+  }
+
+  @Override
+  public SubjectDto updateSubjectAndReturnDto(Long id, UpdateSubjectRequest request) {
+    return convertToDto(updateSubject(id, request));
+  }
+
 }

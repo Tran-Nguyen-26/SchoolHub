@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.TimetableDto;
-import com.schoolmanager.schoolhub.model.Timetable;
 import com.schoolmanager.schoolhub.request.AddTimetableRequest;
 import com.schoolmanager.schoolhub.request.UpdateTimetableRequest;
 import com.schoolmanager.schoolhub.request.requestFilter.TimetableFilterRequest;
@@ -37,16 +36,14 @@ public class TimetableController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllTimetables(@RequestBody TimetableFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<Timetable> timetables = timetableService.getAllTimetables(request, pageable);
-    Page<TimetableDto> timetableDtos = timetableService.convertPageToDto(timetables);
+    Page<TimetableDto> timetableDtos = timetableService.getAllTimtableDtos(request, pageable);
     return ResponseEntity.ok(new ApiResponse("success", timetableDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getTimetableById(@PathVariable Long id) {
-    Timetable timetable = timetableService.getTimetableById(id);
-    TimetableDto timetableDto = timetableService.convertToDto(timetable);
+    TimetableDto timetableDto = timetableService.getTimetableDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", timetableDto));
   }
 
@@ -54,8 +51,7 @@ public class TimetableController {
   @GetMapping("/classroom/{classroomId}/semester/{semesterId}")
   public ResponseEntity<ApiResponse> getTimetableByClassroomAndSemester(@PathVariable Long classroomId,
       @PathVariable Long semesterId) {
-    List<Timetable> timetables = timetableService.getAllTimetablesByClassroomIdAndSemesterId(classroomId, semesterId);
-    List<TimetableDto> timetableDtos = timetableService.convertListToDto(timetables);
+    List<TimetableDto> timetableDtos = timetableService.getAllTimetableDtosByClassroomIdAndSemesterId(classroomId, semesterId);
     return ResponseEntity.ok(new ApiResponse("success", timetableDtos));
   }
 
@@ -63,16 +59,14 @@ public class TimetableController {
   @GetMapping("/teacher/{teacherId}/semester/{semesterId}")
   public ResponseEntity<ApiResponse> getTimetablesByTeacherAndSemester(@PathVariable Long teacherId,
       @PathVariable Long semesterId) {
-    List<Timetable> timetables = timetableService.getAllTimetablesByTeacherIdAndSemesterId(teacherId, semesterId);
-    List<TimetableDto> timetableDtos = timetableService.convertListToDto(timetables);
+    List<TimetableDto> timetableDtos = timetableService.getAllTimetableDtosByTeacherIdAndSemesterId(teacherId, semesterId);
     return ResponseEntity.ok(new ApiResponse("success", timetableDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addTimetable(@Valid @RequestBody AddTimetableRequest request) {
-    Timetable timetable = timetableService.addTimetable(request);
-    TimetableDto timetableDto = timetableService.convertToDto(timetable);
+    TimetableDto timetableDto = timetableService.addTimetableAndReturnDto(request);
     return ResponseEntity.ok(new ApiResponse("success", timetableDto));
   }
 
@@ -80,15 +74,14 @@ public class TimetableController {
   @PutMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updateTimetable(@PathVariable Long id,
       @RequestBody UpdateTimetableRequest request) {
-    Timetable timetable = timetableService.updateTimetable(id, request);
-    TimetableDto timetableDto = timetableService.convertToDto(timetable);
-    return ResponseEntity.ok(new ApiResponse("success", timetableDto));
+    TimetableDto timetableDto = timetableService.updateTimetableAndReturnDto(id, request);
+    return ResponseEntity.ok(new ApiResponse("update timetable success", timetableDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<ApiResponse> deleteTimetableById(@PathVariable Long id) {
     timetableService.deleteTimetableById(id);
-    return ResponseEntity.ok(new ApiResponse("delete time table success", null));
+    return ResponseEntity.ok(new ApiResponse("delete timetable success with id " + id, null));
   }
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.UserDto;
-import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.request.AddUserRequest;
 import com.schoolmanager.schoolhub.request.ChangePasswordRequest;
 import com.schoolmanager.schoolhub.request.UpdateUserRequest;
@@ -35,40 +34,35 @@ public class UserController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllUsers(@RequestBody UserFilterRequest request, @PageableDefault(page = 0, size = 5) Pageable pageable) {
-    Page<User> users = userService.getAllUsers(request, pageable);
-    Page<UserDto> userDtos = userService.convertPageToDto(users);
+    Page<UserDto> userDtos = userService.getAllUserDtos(request, pageable);
     return ResponseEntity.ok(new ApiResponse("success", userDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/id/{id}")
   public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
-    User user = userService.getUserById(id);
-    UserDto userDto = userService.convertToDto(user);
+    UserDto userDto = userService.getUserDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", userDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/email/{email}")
-  public ResponseEntity<ApiResponse> getUserById(@PathVariable String email) {
-    User user = userService.getUserByEmail(email);
-    UserDto userDto = userService.convertToDto(user);
+  public ResponseEntity<ApiResponse> getUserByEmail(@PathVariable String email) {
+    UserDto userDto = userService.getUserDtoByEmail(email);
     return ResponseEntity.ok(new ApiResponse("success", userDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addUser(@Valid @RequestBody AddUserRequest request) {
-    User user = userService.addUser(request);
-    UserDto userDto = userService.convertToDto(user);
+    UserDto userDto = userService.addUserAndReturnDto(request);
     return ResponseEntity.ok(new ApiResponse("success", userDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/update/{id}")
   public ResponseEntity<ApiResponse> updateUserById(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
-    User user = userService.updateUserById(id, request);
-    UserDto userDto = userService.convertToDto(user);
+    UserDto userDto = userService.updateUserAndReturnDto(id, request);
     return ResponseEntity.ok(new ApiResponse("success", userDto));
   }
 

@@ -75,16 +75,6 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public Page<User> getAllStudentUsers(Pageable pageable) {
-    return userRepository.findAllStudentUsers(pageable);  
-  }
-
-  @Override
-  public Page<User> getAllTeacherUsers(Pageable pageable) {
-    return userRepository.findAllTeacherUsers(pageable);
-  }
-
-  @Override
   public User addUser(AddUserRequest request) {
     if (userExists(request.getEmail()))
       throw new AlreadyExsitsException("Already exists email " + request.getEmail());
@@ -150,5 +140,31 @@ public class UserService implements IUserService {
     }
     user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     userRepository.save(user);
+  }
+
+  @Override
+  public Page<UserDto> getAllUserDtos(UserFilterRequest request, Pageable pageable) {
+    Page<User> users = this.getAllUsers(request, pageable);
+    return convertPageToDto(users);
+  }
+
+  @Override
+  public UserDto getUserDtoById(Long id) {
+    return convertToDto(getUserById(id));
+  }
+
+  @Override
+  public UserDto getUserDtoByEmail(String email) {
+    return convertToDto(getUserByEmail(email));
+  }
+
+  @Override
+  public UserDto addUserAndReturnDto(AddUserRequest request) {
+    return convertToDto(addUser(request));
+  }
+
+  @Override
+  public UserDto updateUserAndReturnDto(Long id, UpdateUserRequest request) {
+    return convertToDto(updateUserById(id, request));
   }
 }

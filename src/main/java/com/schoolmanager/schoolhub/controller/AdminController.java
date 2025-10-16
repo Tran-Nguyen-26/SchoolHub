@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.schoolmanager.schoolhub.dto.AdminDto;
-import com.schoolmanager.schoolhub.model.Admin;
 import com.schoolmanager.schoolhub.response.ApiResponse;
 import com.schoolmanager.schoolhub.service.admin.IAdminService;
 
@@ -26,16 +25,14 @@ public class AdminController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<ApiResponse> getAllAdmins() {
-    List<Admin> admins = adminService.getAllAdmins();
-    List<AdminDto> adminDtos = adminService.convertListToDto(admins);
+    List<AdminDto> adminDtos = adminService.getAllAdminDtos();
     return ResponseEntity.ok(new ApiResponse("success", adminDtos));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse> getAdminById(@PathVariable Long id) {
-    Admin admin = adminService.getAdminById(id);
-    AdminDto adminDto = adminService.convertToDto(admin);
+    AdminDto adminDto = adminService.getAdminDtoById(id);
     return ResponseEntity.ok(new ApiResponse("success", adminDto));
   }
 }

@@ -31,11 +31,6 @@ public class SemesterService implements ISemesterService {
   }
 
   @Override
-  public Semester getSemesterBySemesterNameAndSchoolYearName(String semesterName, String schoolYearName) {
-    return semesterRepository.findBySemesterNameAndSchoolYearName(semesterName, schoolYearName);
-  }
-
-  @Override
   public List<Semester> getSemestersBySchoolYearId(Long schoolYearId) {
     return semesterRepository.findBySchoolYearId(schoolYearId);
   }
@@ -72,4 +67,23 @@ public class SemesterService implements ISemesterService {
     return semesters.stream().map(this::convertToDto).toList();
   }
 
+  @Override
+  public SemesterDto getSemesterDtoById(Long id) {
+    return convertToDto(getSemesterById(id));
+  }
+
+  @Override
+  public List<SemesterDto> getSemesterDtosBySchoolYearId(Long schoolYearId) {
+    return convertListToDto(getSemestersBySchoolYearId(schoolYearId));
+  }
+
+  @Override
+  public List<SemesterDto> addSemestersAndReturnDtos(AddSemesterRequest request) {
+    return convertListToDto(addSemesters(request));
+  }
+
+  @Override
+  public SemesterDto updateSemesterAndReturnDto(Long id, UpdateSemesterRequest request) {
+    return convertToDto(updateSemester(id, request));
+  }
 }
