@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,36 +30,46 @@ public class PeriodController {
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/all")
-  public ResponseEntity<ApiResponse> getAllPeriods() {
+  public ResponseEntity<List<PeriodDto>> getAllPeriods() {
     List<PeriodDto> periodDtos = periodService.getAllPeriodDtos();
-    return ResponseEntity.ok(new ApiResponse("success", periodDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(periodDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/id/{id}")
-  public ResponseEntity<ApiResponse> getPeriodById(@PathVariable Long id) {
+  public ResponseEntity<PeriodDto> getPeriodById(@PathVariable Long id) {
     PeriodDto periodDto = periodService.getPeriodDtoById(id);
-    return ResponseEntity.ok(new ApiResponse("success", periodDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(periodDto);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/number/{number}")
-  public ResponseEntity<ApiResponse> getPeriodByPeriodNumber(@PathVariable int number) {
+  public ResponseEntity<PeriodDto> getPeriodByPeriodNumber(@PathVariable int number) {
     PeriodDto periodDto = periodService.getPeriodDtoByPeriodNumber(number);
-    return ResponseEntity.ok(new ApiResponse("success", periodDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(periodDto);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addPeriod(@Valid @RequestBody AddPeriodRequest request) {
+  public ResponseEntity<ApiResponse<PeriodDto>> addPeriod(@Valid @RequestBody AddPeriodRequest request) {
     PeriodDto periodDto = periodService.addPeriodAndReturnDto(request);
-    return ResponseEntity.ok(new ApiResponse("success", periodDto));
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(ApiResponse.success("Period added successfully", periodDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/update/{id}")
-  public ResponseEntity<ApiResponse> updatePeriod(@PathVariable Long id, @RequestBody AddPeriodRequest request) {
+  public ResponseEntity<ApiResponse<PeriodDto>> updatePeriod(@PathVariable Long id, @RequestBody AddPeriodRequest request) {
     PeriodDto periodDto = periodService.updatePeriodAndReturnDto(id, request);
-    return ResponseEntity.ok(new ApiResponse("success", periodDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ApiResponse.success("Period updated successfully", periodDto));
   }
 }

@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,47 +31,59 @@ public class ScoreController {
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse> getScoreById(@PathVariable Long id) {
+  public ResponseEntity<ScoreDto> getScoreById(@PathVariable Long id) {
     ScoreDto scoreDto = scoreService.getScoreDtoById(id);
-    return ResponseEntity.ok(new ApiResponse("success", scoreDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(scoreDto);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/student/{studentId}")
-  public ResponseEntity<ApiResponse> getScoreByStudentId(@PathVariable Long studentId) {
+  public ResponseEntity<List<ScoreDto>> getScoreByStudentId(@PathVariable Long studentId) {
     List<ScoreDto> scoreDtos = scoreService.getScoreDtosByStudentId(studentId);
-    return ResponseEntity.ok(new ApiResponse("success", scoreDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(scoreDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or (hasRole('STUDENT') and @securityService.isStudentInExamId(#examId))")
   @GetMapping("/exam/{examId}")
-  public ResponseEntity<ApiResponse> getScoreByExamId(@PathVariable Long examId) {
+  public ResponseEntity<List<ScoreDto>> getScoreByExamId(@PathVariable Long examId) {
     List<ScoreDto> scoreDtos = scoreService.getScoreDtosByExamId(examId);
-    return ResponseEntity.ok(new ApiResponse("success", scoreDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(scoreDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @GetMapping("/student/{studentId}/exam/{examId}")
-  public ResponseEntity<ApiResponse> getScoreByStudentIdAndExamId(@PathVariable Long studentId,
+  public ResponseEntity<ScoreDto> getScoreByStudentIdAndExamId(@PathVariable Long studentId,
       @PathVariable Long examId) {
     ScoreDto scoreDto = scoreService.getScoreDtoByStudentIdAndExamId(studentId, examId);
-    return ResponseEntity.ok(new ApiResponse("success", scoreDto));
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(scoreDto);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @PostMapping("/assign/student/{studentId}/exam/{examId}")
-  public ResponseEntity<ApiResponse> assignScoreToStudent(@Valid @PathVariable Long studentId,
+  public ResponseEntity<ApiResponse<ScoreDto>> assignScoreToStudent(@Valid @PathVariable Long studentId,
       @PathVariable Long examId,
       @RequestBody AssignScoreRequest request) {
     ScoreDto scoreDto = scoreService.assignScoreToStudentAndReturnDto(studentId, examId, request);
-    return ResponseEntity.ok(new ApiResponse("success", scoreDto));
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(ApiResponse.success("Score added successfully", scoreDto));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @PutMapping("/update/{id}")
-  public ResponseEntity<ApiResponse> updateScore(@PathVariable Long scoreId,
+  public ResponseEntity<ApiResponse<ScoreDto>> updateScore(@PathVariable Long scoreId,
       @RequestBody UpdateScoreRequest request) {
     ScoreDto scoreDto = scoreService.updateScoreAndReturnDto(scoreId, request);
-    return ResponseEntity.ok(new ApiResponse("success", scoreDto));
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(ApiResponse.success("Score updated successfully", scoreDto));
   }
 }

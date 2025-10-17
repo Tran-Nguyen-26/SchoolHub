@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,23 +30,29 @@ public class FileUploadController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/students")
-  public ResponseEntity<ApiResponse> uploadStudents(@RequestParam MultipartFile file) {
+  public ResponseEntity<ApiResponse<?>> uploadStudents(@RequestParam MultipartFile file) {
     importUserExcel.importUserStudents(file);
-    return ResponseEntity.ok(new ApiResponse("success", null));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ApiResponse.success("Upload students successfully"));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/teachers")
-  public ResponseEntity<ApiResponse> uploadTeachers(@RequestParam MultipartFile file) {
+  public ResponseEntity<ApiResponse<?>> uploadTeachers(@RequestParam MultipartFile file) {
     importUserExcel.importUserTeachers(file);
-    return ResponseEntity.ok(new ApiResponse("success", null));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ApiResponse.success("Upload teachers successfully"));
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
   @PostMapping("/scores/exam/id/{examId}")
-  public ResponseEntity<ApiResponse> uploadScoreToExam(@PathVariable Long examId, @RequestParam MultipartFile file) {
+  public ResponseEntity<ApiResponse<?>> uploadScoreToExam(@PathVariable Long examId, @RequestParam MultipartFile file) {
     List<Score> scores = importUserExcel.importScores(file, examId);
     List<ScoreDto> scoreDtos = scoreService.convertListToDto(scores);
-    return ResponseEntity.ok(new ApiResponse("success", scoreDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ApiResponse.success("Upload scores successfully", scoreDtos));
   }
 }

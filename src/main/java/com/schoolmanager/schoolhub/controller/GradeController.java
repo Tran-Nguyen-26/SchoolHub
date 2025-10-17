@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,29 +27,37 @@ public class GradeController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
-  public ResponseEntity<ApiResponse> getAllGrades() {
+  public ResponseEntity<List<GradeDto>> getAllGrades() {
     List<GradeDto> gradeDtos = gradeService.getAllGradeDtos();
-    return ResponseEntity.ok(new ApiResponse("success", gradeDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(gradeDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/id/{id}")
-  public ResponseEntity<ApiResponse> getGradeById(@PathVariable Long id) {
+  public ResponseEntity<GradeDto> getGradeById(@PathVariable Long id) {
     GradeDto gradeDto = gradeService.getGradeDtoById(id);
-    return ResponseEntity.ok(new ApiResponse("success", gradeDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(gradeDto);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/level/{level}")
-  public ResponseEntity<ApiResponse> getGradeByLevel(@PathVariable String level) {
+  public ResponseEntity<GradeDto> getGradeByLevel(@PathVariable String level) {
     GradeDto gradeDto = gradeService.getGradeDtoByLevel(level);
-    return ResponseEntity.ok(new ApiResponse("success", gradeDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(gradeDto);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addGrade(@RequestBody String level) {
+  public ResponseEntity<ApiResponse<GradeDto>> addGrade(@RequestBody String level) {
     GradeDto gradeDto = gradeService.addGradeAndReturnDto(level);
-    return ResponseEntity.ok(new ApiResponse("success", gradeDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ApiResponse.success("Grade added successfully", gradeDto));
   }
 }

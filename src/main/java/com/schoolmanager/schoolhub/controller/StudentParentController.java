@@ -1,5 +1,6 @@
 package com.schoolmanager.schoolhub.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,24 +25,30 @@ public class StudentParentController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse> getStudentParentById(@PathVariable Long id) {
+  public ResponseEntity<StudentParentDto> getStudentParentById(@PathVariable Long id) {
     StudentParentDto studentParentDto = studentParentService.getStudentParentDtoById(id);
-    return ResponseEntity.ok(new ApiResponse("success", studentParentDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(studentParentDto);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/studentId/{studentId}/parentId/{parentId}")
-  public ResponseEntity<ApiResponse> getStudentParentByStudentIdAndParentId(@PathVariable Long studentId,
+  public ResponseEntity<StudentParentDto> getStudentParentByStudentIdAndParentId(@PathVariable Long studentId,
       @PathVariable Long parentId) {
     StudentParentDto studentParentDto = studentParentService.getStudentParentDtoByStudentIdAndParentId(studentId, parentId);
-    return ResponseEntity.ok(new ApiResponse("success", studentParentDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(studentParentDto);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/assign")
-  public ResponseEntity<ApiResponse> assginRelationship(@RequestParam Long studentId, @RequestParam Long parentId,
+  public ResponseEntity<ApiResponse<StudentParentDto>> assginRelationship(@RequestParam Long studentId, @RequestParam Long parentId,
       @RequestParam String relationship) {
     StudentParentDto studentParentDto = studentParentService.assignRelationshipAndReturnDto(studentId, parentId, relationship);
-    return ResponseEntity.ok(new ApiResponse("success", studentParentDto));
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(ApiResponse.success("Relationship added successfully", studentParentDto));
   }
 }

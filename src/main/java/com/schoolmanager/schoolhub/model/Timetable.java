@@ -1,5 +1,7 @@
 package com.schoolmanager.schoolhub.model;
 
+import java.io.Serializable;
+
 import com.schoolmanager.schoolhub.enums.DayOfWeek;
 
 import jakarta.persistence.Entity;
@@ -20,7 +22,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Timetable {
+public class Timetable implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

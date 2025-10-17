@@ -3,6 +3,9 @@ package com.schoolmanager.schoolhub.service.timetable;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -179,6 +182,7 @@ public class TimetableService implements ITimetableService {
   }
 
   @Override
+  @Cacheable(value = "timetables:dto", key = "#id")
   public TimetableDto getTimetableDtoById(Long id) {
     return convertToDto(getTimetableById(id));
   }
@@ -194,11 +198,13 @@ public class TimetableService implements ITimetableService {
   }
 
   @Override
+  @CacheEvict(value = "timetables:dto", allEntries = true)
   public TimetableDto addTimetableAndReturnDto(AddTimetableRequest request) {
     return convertToDto(addTimetable(request));
   }
 
   @Override
+  @CachePut(value = "timetables:dto", key = "#id")
   public TimetableDto updateTimetableAndReturnDto(Long id, UpdateTimetableRequest request) {
     return convertToDto(updateTimetable(id, request));
   }

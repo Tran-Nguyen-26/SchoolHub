@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,30 +29,38 @@ public class RoleController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/all")
-  public ResponseEntity<ApiResponse> getAllRoles() {
+  public ResponseEntity<List<RoleDto>> getAllRoles() {
     List<RoleDto> roleDtos = roleService.getAllRoleDtos();
-    return ResponseEntity.ok(new ApiResponse("success", roleDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(roleDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/id/{id}")
-  public ResponseEntity<ApiResponse> getRoleById(@PathVariable Long id) {
+  public ResponseEntity<RoleDto> getRoleById(@PathVariable Long id) {
     RoleDto roleDto = roleService.getRoleDtoById(id);
-    return ResponseEntity.ok(new ApiResponse("success", roleDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(roleDto);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/name/{name}")
-  public ResponseEntity<ApiResponse> getRoleByName(@PathVariable RoleName name) {
+  public ResponseEntity<RoleDto> getRoleByName(@PathVariable RoleName name) {
     RoleDto roleDto = roleService.getRoleDtoByName(name);
-    return ResponseEntity.ok(new ApiResponse("success", roleDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(roleDto);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/{id}/add/permission")
-  public ResponseEntity<ApiResponse> assignPermissionsToRole(@PathVariable Long id,
+  public ResponseEntity<ApiResponse<RoleDto>> assignPermissionsToRole(@PathVariable Long id,
       @RequestBody List<PermissionName> permissionNames) {
     RoleDto roleDto = roleService.assignPermissionsToRoleAndReturnDto(id, permissionNames);
-    return ResponseEntity.ok(new ApiResponse("success", roleDto));
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(ApiResponse.success("Assign permissions to role successfully", roleDto));
   }
 }

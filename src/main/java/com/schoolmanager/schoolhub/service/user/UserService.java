@@ -1,6 +1,8 @@
 package com.schoolmanager.schoolhub.service.user;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -144,26 +146,29 @@ public class UserService implements IUserService {
 
   @Override
   public Page<UserDto> getAllUserDtos(UserFilterRequest request, Pageable pageable) {
-    Page<User> users = this.getAllUsers(request, pageable);
-    return convertPageToDto(users);
+    return convertPageToDto(getAllUsers(request, pageable));
   }
 
   @Override
+  @Cacheable(value = "users:dto", key = "#id")
   public UserDto getUserDtoById(Long id) {
     return convertToDto(getUserById(id));
   }
 
   @Override
+  @Cacheable(value = "users:dto", key = "'email:' + #email")
   public UserDto getUserDtoByEmail(String email) {
     return convertToDto(getUserByEmail(email));
   }
 
   @Override
+  @CacheEvict(value = "users:dto", allEntries = true)
   public UserDto addUserAndReturnDto(AddUserRequest request) {
     return convertToDto(addUser(request));
   }
 
   @Override
+  @CacheEvict(value = "users:dto", key = "#id")
   public UserDto updateUserAndReturnDto(Long id, UpdateUserRequest request) {
     return convertToDto(updateUserById(id, request));
   }

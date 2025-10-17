@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,43 +31,55 @@ public class SubjectController {
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse> getSubjectById(@PathVariable Long id) {
+  public ResponseEntity<SubjectDto> getSubjectById(@PathVariable Long id) {
     SubjectDto subjectDto = subjectService.getSubjectDtoById(id);
-    return ResponseEntity.ok(new ApiResponse("success", subjectDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(subjectDto);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/all")
-  public ResponseEntity<ApiResponse> getAllSubjects() {
+  public ResponseEntity<List<SubjectDto>> getAllSubjects() {
     List<SubjectDto> subjectDtos = subjectService.getAllSubjectDtos();
-    return ResponseEntity.ok(new ApiResponse("success", subjectDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(subjectDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/by-grade/id/{gradeId}")
-  public ResponseEntity<ApiResponse> getSubjectsByGradeId(@PathVariable Long gradeId) {
+  public ResponseEntity<List<SubjectDto>> getSubjectsByGradeId(@PathVariable Long gradeId) {
     List<SubjectDto> subjectDtos = subjectService.getSubjectDtosByGradeId(gradeId);
-    return ResponseEntity.ok(new ApiResponse("success", subjectDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(subjectDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER') or hasRole('STUDENT')")
   @GetMapping("/by-grade/level/{level}")
-  public ResponseEntity<ApiResponse> getSubjectsByGradeLevel(@PathVariable String level) {
+  public ResponseEntity<List<SubjectDto>> getSubjectsByGradeLevel(@PathVariable String level) {
     List<SubjectDto> subjectDtos = subjectService.getSubjectDtosByGradeLevel(level);
-    return ResponseEntity.ok(new ApiResponse("success", subjectDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(subjectDtos);
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addSubject(@Valid @RequestBody AddSubjectRequest request) {
+  public ResponseEntity<ApiResponse<SubjectDto>> addSubject(@Valid @RequestBody AddSubjectRequest request) {
     SubjectDto subjectDto = subjectService.addSubjectAndReturnDto(request);
-    return ResponseEntity.ok(new ApiResponse("success", subjectDto));
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(ApiResponse.success("Subject added successfully", subjectDto));
   }
 
   @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/update/{id}")
-  public ResponseEntity<ApiResponse> updateSubject(@PathVariable Long id, @RequestBody UpdateSubjectRequest request) {
+  public ResponseEntity<ApiResponse<SubjectDto>> updateSubject(@PathVariable Long id, @RequestBody UpdateSubjectRequest request) {
     SubjectDto subjectDto = subjectService.updateSubjectAndReturnDto(id, request);
-    return ResponseEntity.ok(new ApiResponse("success", subjectDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ApiResponse.success("Subject updated successfully", subjectDto));
   }
 }

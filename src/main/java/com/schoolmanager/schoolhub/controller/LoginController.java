@@ -28,12 +28,14 @@ public class LoginController {
   private final JwtUtils jwtUtils;
 
   @PostMapping("")
-  public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequest request) {
+  public ResponseEntity<ApiResponse<JwtResponse>> login(@Valid @RequestBody LoginRequest request) {
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtUtils.generateTokenForUser(authentication);
     SchoolUserDetails userDetails = (SchoolUserDetails) authentication.getPrincipal();
-    return ResponseEntity.ok(new ApiResponse("login success", new JwtResponse(userDetails.getId(), jwt)));
+    return ResponseEntity.ok(ApiResponse
+      .success("Login successfully", new JwtResponse(userDetails.getId(), jwt))
+    );
   }
 }

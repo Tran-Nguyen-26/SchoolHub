@@ -2,6 +2,7 @@ package com.schoolmanager.schoolhub.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,27 +27,35 @@ public class EventController {
   private final IEventService eventService;
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse> getEventById(@PathVariable Long id) {
+  public ResponseEntity<EventDto> getEventById(@PathVariable Long id) {
     EventDto eventDto = eventService.getEventDtoById(id);
-    return ResponseEntity.ok(new ApiResponse("success", eventDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(eventDto);
   }
 
   @GetMapping("/classroom/{classroomId}")
-  public ResponseEntity<ApiResponse> getEventsByClassroomId(@PathVariable Long classroomId) {
+  public ResponseEntity<List<EventDto>> getEventsByClassroomId(@PathVariable Long classroomId) {
     List<EventDto> eventDtos = eventService.getEventDtosByClassroomId(classroomId);
-    return ResponseEntity.ok(new ApiResponse("success", eventDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(eventDtos);
   }
 
   @GetMapping("/classroom/{classroomId}/semester/{semesterId}")
-  public ResponseEntity<ApiResponse> getEventsByClassroomAndSemester(@PathVariable Long classroomId,
+  public ResponseEntity<List<EventDto>> getEventsByClassroomAndSemester(@PathVariable Long classroomId,
       @PathVariable Long semesterId) {
     List<EventDto> eventDtos = eventService.getEventDtosByClassroomIdAndSemesterId(classroomId, semesterId);
-    return ResponseEntity.ok(new ApiResponse("success", eventDtos));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(eventDtos);
   }
 
   @PostMapping("/add")
-  public ResponseEntity<ApiResponse> addEvent(@Valid @RequestBody AddEventRequest request) {
+  public ResponseEntity<ApiResponse<EventDto>> addEvent(@Valid @RequestBody AddEventRequest request) {
     EventDto eventDto = eventService.addEventAndReturnDto(request);
-    return ResponseEntity.ok(new ApiResponse("success", eventDto));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ApiResponse.success("Event added successfully", eventDto));
   }
 }
