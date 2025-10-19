@@ -99,4 +99,17 @@ public class GlobalExceptionHandler {
         "Incorrect email or password");
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
   }
+
+  @ExceptionHandler(InvalidUserRoleException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidUserRoleException(InvalidUserRoleException e, 
+      HttpServletRequest request) {
+    ErrorResponse error = new ErrorResponse(
+      new Date(System.currentTimeMillis()), 
+      HttpStatus.BAD_REQUEST.value(),
+      request.getRequestURI(),
+      "Invalid Error",
+      e.getMessage()
+    );
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
 }

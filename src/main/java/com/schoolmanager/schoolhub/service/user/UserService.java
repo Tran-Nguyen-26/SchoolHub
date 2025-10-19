@@ -15,6 +15,7 @@ import com.schoolmanager.schoolhub.dto.UserDto;
 import com.schoolmanager.schoolhub.enums.RoleName;
 import com.schoolmanager.schoolhub.exceptions.AlreadyExsitsException;
 import com.schoolmanager.schoolhub.exceptions.InvalidPasswordException;
+import com.schoolmanager.schoolhub.exceptions.InvalidUserRoleException;
 import com.schoolmanager.schoolhub.exceptions.ResourceNotFoundException;
 import com.schoolmanager.schoolhub.model.Admin;
 import com.schoolmanager.schoolhub.model.Parent;
@@ -25,6 +26,7 @@ import com.schoolmanager.schoolhub.model.User;
 import com.schoolmanager.schoolhub.repository.AdminRepository;
 import com.schoolmanager.schoolhub.repository.ParentRepository;
 import com.schoolmanager.schoolhub.repository.RoleRepository;
+import com.schoolmanager.schoolhub.repository.StudentParentRepository;
 import com.schoolmanager.schoolhub.repository.StudentRepository;
 import com.schoolmanager.schoolhub.repository.TeacherRepository;
 import com.schoolmanager.schoolhub.repository.UserRepository;
@@ -45,6 +47,7 @@ public class UserService implements IUserService {
   private final RoleRepository roleRepository;
   private final StudentRepository studentRepository;
   private final ParentRepository parentRepository;
+  private final StudentParentRepository studentParentRepository;
   private final TeacherRepository teacherRepository;
   private final AdminRepository adminRepository;
   private final ModelMapper modelMapper;
@@ -114,6 +117,16 @@ public class UserService implements IUserService {
     User user = getUserById(id);
     user = modelMapper.map(request, User.class);
     return userRepository.save(user);
+  }
+
+  @Override
+  public void deleteUserStudentById(Long id) {
+    User user = getUserById(id);
+    if (!user.getRole().getName().toString().equals("STUDENT")) {
+      throw new InvalidUserRoleException("Role is not STUDENT");
+    }
+    studentRepository.deleteById(id);
+    userRepository.deleteById(id);
   }
 
   @Override

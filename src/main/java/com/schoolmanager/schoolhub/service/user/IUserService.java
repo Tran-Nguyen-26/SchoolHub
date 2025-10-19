@@ -27,6 +27,8 @@ public interface IUserService {
 
   User updateUserById(Long id, UpdateUserRequest request);
 
+  void deleteUserStudentById(Long id);
+
   void changePassword(ChangePasswordRequest request);
 
   //=================================================//
